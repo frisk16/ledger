@@ -1,0 +1,104 @@
+body {
+  background-color: #eee;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alert {
+  position: fixed;
+  z-index: -1;
+  opacity: 0;
+  top: 64px;
+  left: 15%;
+  right: 15%;
+  animation-name: alert;
+  animation-duration: 4s;
+}
+
+@keyframes alert {
+  0% { opacity: 0; z-index: 1; }
+  10% { opacity: 0.9; z-index: 1; }
+  90% { opacity: 0.9; z-index: 1; }
+  100% { opacity: 0; }
+}
+
+.col-payments {
+  width: calc(100% - 240px);
+}
+
+.title {
+  border-bottom: 1px solid #fff;
+}
+
+.page-title {
+  font-size: 1.1rem;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #555;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+
+#paymentsOpenMenuBtn {
+  position: fixed;
+  left: 5%;
+  bottom: 5%;
+  display: none;
+}
+
+aside {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #555;
+  height: 100%;
+  width: 240px;
+  padding: 64px 8px 0;
+  color: #fff;
+  transition: transform 0.3s;
+}
+
+aside .container {
+  font-size: 0.9em;
+}
+
+@media screen and (max-width: 767px) {
+  .alert {
+    left: 5%;
+    right: 5%;
+  }
+
+  #paymentsOpenMenuBtn {
+    display: block;
+  }
+
+  .col-payments {
+    width: 100%;
+  }
+
+  aside {
+    transform: translateX(-240px);
+  }
+
+}

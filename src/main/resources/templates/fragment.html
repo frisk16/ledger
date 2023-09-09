@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+  <!-- meta要素 -->
+  <div th:fragment="meta" th:remove="tag">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </div>
+
+  <!-- link要素 -->
+  <div th:fragment="styles" th:remove="tag">
+    <!-- BootStrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  
+    <!-- GoogleFonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+  
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+  </div>
+  
+</head>
+<body>
+  
+  <!-- header -->
+  <div th:fragment="header" th:remove="tag">
+    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+      <div class="container-fluid">
+        <a th:href="@{/}" class="navbar-brand">
+          <span class="small">帳簿管理システム</span>
+        </a>
+
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+
+          <ul class="navbar-nav ms-auto">
+
+            <!-- 未ログイン -->
+            <li class="nav-item" sec:authorize="isAnonymous()">
+              <a th:href="@{/login}" class="nav-link">ログイン</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAnonymous()">
+              <a th:href="@{/register}" class="nav-link">登録</a>
+            </li>
+
+            <!-- 一般ユーザー -->
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+              <a href="#" class="nav-link dropdown-toggle" id="dropdownUserContent" data-bs-toggle="dropdown" aria-expanded="false">
+                <span sec:authentication="principal.user.name"></span>
+              </a>
+
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUserContent">
+                <li>
+                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">ログアウト</a>
+                </li>
+              </ul>
+            </li>
+             
+          </ul>
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <!-- ログアウトモーダル -->
+    <div class="modal fade" id="logoutModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title">ログアウトしますか？</p>
+          </div>
+          <div class="modal-footer">
+            <form th:action="@{/logout}" method="post">
+              <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
+              <button type="submit" class="btn btn-danger">ログアウト</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <!-- footer -->
+  <div th:fragment="footer" th:remove="tag">
+    <footer>
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <p class="text-center text-muted small mb-0">&copy; supported by Naoto</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- script要素 -->
+  <div th:fragment="scripts" th:remove="tag">
+    <!-- BootStrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/f1526c5005.js" crossorigin="anonymous"></script>
+  </div>
+
+</body>
+</html>
