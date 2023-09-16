@@ -1,5 +1,6 @@
 package com.example.ledger.controller;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ledger.entity.Category;
@@ -48,17 +50,47 @@ public class PaymentController {
   
   @GetMapping
   public String index(
+    @RequestParam(name = "year", required = false) Integer year,
+    @RequestParam(name = "month", required = false) Integer month,
+    @RequestParam(name = "categoryId", required = false) Integer categoryId,
     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-    @PageableDefault(page = 0, size = 10, sort = "date", direction = Direction.DESC) Pageable pageable,
+    @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
     Model model
   ) {
     User user = userDetailsImpl.getUser();
     List<Category> categories = this.categoryRepository.findByUser(user);
-    Page<Payment> payments = this.paymentRepository.findByUser(user, pageable);
+    LocalDate currentDate = LocalDate.now();
+    if(year == null) {
+      year = currentDate.getYear();
+    }
+    if(month == null || month < 1 || month > 12) {
+      month = currentDate.getMonthValue();
+    }
+    
+    String insertYear = year.toString();
+    String insertMonth;
+    if(month < 10) {
+      insertMonth = "0" + month;
+    } else {
+      insertMonth = month.toString();
+    }
+    LocalDate startDate = LocalDate.parse(insertYear + "-" + insertMonth + "-01");
+    LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+    
+    Page<Payment> payments;
+    if(categoryId != null) {
+      Category category = this.categoryRepository.getReferenceById(categoryId);
+      payments = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateDescCreatedAtDesc(user, category, startDate, endDate, pageable);
+    } else {
+      payments = this.paymentRepository.findByUserAndDateBetweenOrderByDateDescCreatedAtDesc(user, startDate, endDate, pageable);
+    }
 
     model.addAttribute("categories", categories);
     model.addAttribute("payments", payments);
     model.addAttribute("methodIcons", this.methodIcons());
+    model.addAttribute("year", year);
+    model.addAttribute("month", month);
+    model.addAttribute("categoryId", categoryId);
     
     return "payments/index";
   }

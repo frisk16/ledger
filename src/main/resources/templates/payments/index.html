@@ -33,8 +33,14 @@
       <div th:if="${!categories.isEmpty()}" class="mt-3">
         <ul>
           <li th:each="category : ${categories}" class="mb-3">
-            <i class="fa-solid fa-caret-right"></i>
-            <a href="#" th:text="${category.getName()}" class="text-light fs-6 ms-2"></a>
+            <div th:if="${categoryId == category.getId()}" class="text-info">
+              <i class="fa-solid fa-forward"></i>
+              <span class="fs-6 ms-2" th:text="${category.getName()}"></span>
+            </div>
+            <div th:unless="${categoryId == category.getId()}">
+              <i class="fa-solid fa-caret-right"></i>
+              <a th:href="@{/payments(year = ${year}, month = ${month}, categoryId = ${category.getId()})}" th:text="${category.getName()}" class="text-light fs-6 ms-2"></a>
+            </div>
           </li> 
         </ul>
       </div>
@@ -59,10 +65,29 @@
           </a>
         </div>
 
+        <!-- 日付表示 -->
+        <h4 class="mb-4 ms-3">
+          <a th:if="${month > 1}" th:href="@{/payments(year = ${year}, month = ${month - 1})}" class="me-4">
+            <i class="fa-solid fa-chevron-left"></i>
+          </a>
+          <span th:unless="${month > 1}" class="text-secondary me-4">
+            <i class="fa-solid fa-chevron-left"></i>
+          </span>
+          <a href="#" class="text-dark">
+            <span th:text="${year + '年'}"></span>
+            <span th:text="${month + '月'}"></span>
+          </a>
+          <a th:if="${month < 12}" th:href="@{/payments(year = ${year}, month = ${month + 1})}" class="ms-4">
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+          <span th:unless="${month < 12}" class="text-secondary ms-4">
+            <i class="fa-solid fa-chevron-right"></i>
+          </span>
+        </h4>
+
         <div th:if="${!payments.isEmpty()}" class="row justify-content-center">
           <ul class="col-xl-8 col-lg-10 col-md-12 col-11">
             <li th:each="payment : ${payments}">
-
               <div class="row mb-1">
                 <div class="col-6">
                   <p th:text="${#temporals.format(payment.getDate(), 'yyyy年MM月dd日')}"></p>
