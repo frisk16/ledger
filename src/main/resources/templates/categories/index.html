@@ -76,7 +76,12 @@
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <div class="modal-title fw-bold" th:text="${category.getName() + 'を削除しますか？'}"></div>
+                        <div class="modal-title fw-bold" th:text="${category.getName() + ' 削除'}"></div>
+                      </div>
+                      <div class="modal-body">
+                        <p class="text-danger">※注意</p>
+                        <p>カテゴリーを削除すると、それに紐付いた支払いデータも全て削除されます。</p>
+                        <p>本当によろしいですか？</p>
                       </div>
                       <div class="modal-footer">
                         <form th:action="@{/categories/__${category.getId()}__/delete}" method="post">

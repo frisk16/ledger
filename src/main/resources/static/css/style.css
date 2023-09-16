@@ -48,6 +48,15 @@ ul {
   font-size: 1.1rem;
 }
 
+.pagination .active {
+  background-color: #0af;
+  color: #fff;
+}
+
+.pagination .disabled {
+  color: #aaa;
+}
+
 .background {
   position: fixed;
   top: 0;

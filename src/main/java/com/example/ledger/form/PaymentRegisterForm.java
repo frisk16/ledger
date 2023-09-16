@@ -10,9 +10,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PaymentEditForm {
+public class PaymentRegisterForm {
   
-  private Integer id;
   private Integer userId;
 
   @NotNull(message = "カテゴリーを選択してください")

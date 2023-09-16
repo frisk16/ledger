@@ -68,13 +68,60 @@
                   <p th:text="${#temporals.format(payment.getDate(), 'yyyy年MM月dd日')}"></p>
                 </div>
                 <div class="col-6 text-end">
-                  <a href="#" class="text-success">
+                  <a th:href="@{/payments/__${payment.getId()}__/edit}" class="text-success">
                     <i class="fa-solid fa-pencil"></i>
                   </a>
                   <span>｜</span>
-                  <a href="#" class="text-danger">
+                  <a href="#" class="text-danger" data-bs-toggle="modal" th:data-bs-target="${'#delPaymentModal' + payment.getId()}">
                     <i class="fa-solid fa-trash-can"></i>
                   </a>
+
+                  <!-- 削除用モーダル -->
+                  <div class="modal fade" th:id="${'delPaymentModal' + payment.getId()}" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <p class="modal-title">
+                            以下のデータを削除します、よろしいですか？
+                          </p>
+                        </div>
+                        <div class="modal-body text-start">
+                          <div class="container-fluid">
+                            <div class="row">
+                              <div class="col-3">
+                                日付：
+                              </div>
+                              <div class="col-9">
+                                <strong th:text="${#temporals.format(payment.getDate(), 'YYYY年MM月dd日')}"></strong>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-3">
+                                タイトル：
+                              </div>
+                              <div class="col-9">
+                                <strong th:text="${payment.getName()}"></strong>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-3">
+                                金額：
+                              </div>
+                              <div class="col-9">
+                                <strong th:text="${'￥' + payment.getPrice() + '円'}"></strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <form th:action="@{/payments/__${payment.getId()}__/delete}" method="post">
+                            <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-danger">削除</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -103,6 +150,27 @@
               </div>
               <hr class="mt-0">
 
+            </li>
+            <li class="mt-5">
+              <!-- ページネーション -->
+              <div th:if="${payments.getTotalPages() > 1}" class="d-flex justify-content-center">
+                <nav>
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <span th:if="${payments.isFirst()}" class="page-link disabled">前</span>
+                      <a th:unless="${payments.isFirst()}" th:href="@{/payments(page = ${payments.getNumber() - 1})}" class="page-link">前</a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(0, payments.getTotalPages() - 1)}" class="page-item">
+                      <span th:if="${i == payments.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
+                      <a th:unless="${i == payments.getNumber()}" th:href="@{/payments(page = ${i})}" class="page-link" th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item">
+                      <span th:if="${payments.isLast()}" class="page-link disabled">次</span>
+                      <a th:unless="${payments.isLast()}" th:href="@{/payments(page = ${payments.getNumber() + 1})}" class="page-link">次</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </li>
           </ul>
         </div>

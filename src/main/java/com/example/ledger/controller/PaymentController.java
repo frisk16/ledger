@@ -22,8 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.ledger.entity.Category;
 import com.example.ledger.entity.Payment;
 import com.example.ledger.entity.User;
-import com.example.ledger.form.PaymentAddForm;
-import com.example.ledger.form.PaymentEditForm;
+import com.example.ledger.form.PaymentRegisterForm;
 import com.example.ledger.repository.CategoryRepository;
 import com.example.ledger.repository.PaymentRepository;
 import com.example.ledger.security.UserDetailsImpl;
@@ -71,9 +70,9 @@ public class PaymentController {
   ) {
     User user = userDetailsImpl.getUser();
     List<Category> categories = this.categoryRepository.findByUser(user);
-    PaymentAddForm paymentAddForm = new PaymentAddForm(user.getId(), null, null, null, null, null);
+    PaymentRegisterForm paymentRegisterForm = new PaymentRegisterForm(user.getId(), null, null, null, null, null);
 
-    model.addAttribute("paymentAddForm", paymentAddForm);
+    model.addAttribute("paymentRegisterForm", paymentRegisterForm);
     model.addAttribute("categories", categories);
     model.addAttribute("methods", this.allMethods());
 
@@ -83,7 +82,7 @@ public class PaymentController {
   @PostMapping("/create")
   public String create(
     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-    @ModelAttribute @Validated PaymentAddForm paymentAddForm,
+    @ModelAttribute @Validated PaymentRegisterForm paymentRegisterForm,
     BindingResult bindingResult, RedirectAttributes redirectAttributes,
     Model model
   ) {
@@ -97,7 +96,7 @@ public class PaymentController {
       return "payments/add";
     }
 
-    this.paymentService.create(paymentAddForm);
+    this.paymentService.create(paymentRegisterForm);
     redirectAttributes.addFlashAttribute("successMsg", "支払いデータを追加しました");    
 
     return "redirect:/payments";
@@ -116,13 +115,56 @@ public class PaymentController {
     }
 
     List<Category> categories = this.categoryRepository.findByUser(user);
-    PaymentEditForm paymentEditForm = new PaymentEditForm(id, user.getId(), null, null, null, null, null);
+    PaymentRegisterForm paymentRegisterForm = new PaymentRegisterForm(
+      user.getId(),
+      payment.getCategory().getId(),
+      payment.getName(),
+      payment.getPrice(),
+      payment.getMethod(),
+      payment.getDate().toString() 
+    );
     model.addAttribute("payment", payment);
-    model.addAttribute("paymentEditForm", paymentEditForm);
+    model.addAttribute("paymentRegisterForm", paymentRegisterForm);
     model.addAttribute("categories", categories);
     model.addAttribute("methods", this.allMethods());
 
     return "payments/edit";
+  }
+
+  @PostMapping("/{id}/update")
+  public String update(
+    @PathVariable(name = "id") Integer id,
+    @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    @ModelAttribute @Validated PaymentRegisterForm paymentRegisterForm,
+    BindingResult bindingResult, RedirectAttributes redirectAttributes,
+    Model model
+  ) {
+    if(bindingResult.hasErrors()) {
+      User user = userDetailsImpl.getUser();
+      List<Category> categories = this.categoryRepository.findByUser(user);
+
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
+      model.addAttribute("categories", categories);
+      model.addAttribute("methods", this.allMethods());
+
+      return "payments/edit";
+    }
+
+    this.paymentService.update(paymentRegisterForm, id);
+    redirectAttributes.addFlashAttribute("successMsg", "支払いデータを更新しました");
+
+    return "redirect:/payments";
+  }
+
+  @PostMapping("/{id}/delete")
+  public String delete(
+    @PathVariable(name = "id") Integer id,
+    RedirectAttributes redirectAttributes
+  ) {
+    this.paymentRepository.deleteById(id);
+    redirectAttributes.addFlashAttribute("successMsg", "支払いデータを削除しました");
+
+    return "redirect:/payments";
   }
 
   // 支払い方法のリスト
