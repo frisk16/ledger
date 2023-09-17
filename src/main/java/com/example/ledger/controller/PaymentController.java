@@ -60,11 +60,13 @@ public class PaymentController {
     User user = userDetailsImpl.getUser();
     List<Category> categories = this.categoryRepository.findByUser(user);
     LocalDate currentDate = LocalDate.now();
+    Integer currentYear = currentDate.getYear();
+    Integer currentMonth = currentDate.getMonthValue();
     if(year == null) {
-      year = currentDate.getYear();
+      year = currentYear;
     }
     if(month == null || month < 1 || month > 12) {
-      month = currentDate.getMonthValue();
+      month = currentMonth;
     }
     
     String insertYear = year.toString();
@@ -91,6 +93,8 @@ public class PaymentController {
     model.addAttribute("year", year);
     model.addAttribute("month", month);
     model.addAttribute("categoryId", categoryId);
+    model.addAttribute("currentYear", currentYear);
+    model.addAttribute("currentMonth", currentMonth);
     
     return "payments/index";
   }
