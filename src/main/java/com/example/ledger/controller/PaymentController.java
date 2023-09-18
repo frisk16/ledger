@@ -23,10 +23,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ledger.entity.Category;
 import com.example.ledger.entity.Payment;
+import com.example.ledger.entity.Tag;
 import com.example.ledger.entity.User;
+import com.example.ledger.form.PaymentTagsForm;
 import com.example.ledger.form.PaymentRegisterForm;
 import com.example.ledger.repository.CategoryRepository;
 import com.example.ledger.repository.PaymentRepository;
+import com.example.ledger.repository.TagRepository;
 import com.example.ledger.security.UserDetailsImpl;
 import com.example.ledger.service.PaymentService;
 
@@ -37,15 +40,18 @@ public class PaymentController {
   private final CategoryRepository categoryRepository;
   private final PaymentRepository paymentRepository;
   private final PaymentService paymentService;
+  private final TagRepository tagRepository;
 
   public PaymentController(
     CategoryRepository categoryRepository,
     PaymentRepository paymentRepository,
-    PaymentService paymentService
+    PaymentService paymentService,
+    TagRepository tagRepository
   ) {
     this.categoryRepository = categoryRepository;
     this.paymentRepository = paymentRepository;
     this.paymentService = paymentService;
+    this.tagRepository = tagRepository;
   }
   
   @GetMapping
@@ -58,6 +64,7 @@ public class PaymentController {
     Model model
   ) {
     User user = userDetailsImpl.getUser();
+    List<Tag> tags = this.tagRepository.findByUserOrderByCreatedAtDesc(user);
     List<Category> categories = this.categoryRepository.findByUser(user);
     LocalDate currentDate = LocalDate.now();
     Integer currentYear = currentDate.getYear();
@@ -95,6 +102,8 @@ public class PaymentController {
     model.addAttribute("categoryId", categoryId);
     model.addAttribute("currentYear", currentYear);
     model.addAttribute("currentMonth", currentMonth);
+    model.addAttribute("paymentTagsForm", new PaymentTagsForm());
+    model.addAttribute("tags", tags);
     
     return "payments/index";
   }
@@ -199,6 +208,40 @@ public class PaymentController {
   ) {
     this.paymentRepository.deleteById(id);
     redirectAttributes.addFlashAttribute("successMsg", "支払いデータを削除しました");
+
+    return "redirect:/payments";
+  }
+
+  @PostMapping("/{id}/addTags")
+  public String addTags(
+    @PathVariable(name = "id") Integer id,
+    @ModelAttribute @Validated PaymentTagsForm paymentTagsForm,
+    BindingResult bindingResult, RedirectAttributes redirectAttributes
+  ) {
+    if(bindingResult.hasErrors()) {
+      redirectAttributes.addFlashAttribute("errorMsg", "タグを選択してください");
+      return "redirect:/payments";
+    }
+
+    this.paymentService.addTags(paymentTagsForm, id);
+    redirectAttributes.addFlashAttribute("successMsg", "タグを追加しました");
+
+    return "redirect:/payments";
+  }
+
+  @PostMapping("/{id}/deleteTags")
+  public String deleteTags(
+    @PathVariable(name = "id") Integer id,
+    @ModelAttribute @Validated PaymentTagsForm paymentTagsForm,
+    BindingResult bindingResult, RedirectAttributes redirectAttributes
+  ) {
+    if(bindingResult.hasErrors()) {
+      redirectAttributes.addFlashAttribute("errorMsg", "タグを選択してください");
+      return "redirect:/payments";
+    }
+    
+    this.paymentService.deleteTags(paymentTagsForm, id);
+    redirectAttributes.addFlashAttribute("successMsg", "タグを削除しました");
 
     return "redirect:/payments";
   }
