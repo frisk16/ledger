@@ -18,94 +18,120 @@
     <span th:text="${successMsg}"></span>
   </div>
 
+  <div class="background"></div>
+  <a href="#" id="paymentsOpenMenuBtn">
+    <i class="fa-2x fa-solid fa-bars"></i>
+  </a>
+  <aside>
+    <div class="d-flex justify-content-between">
+      <h5>MENU</h5>
+      <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
+    </div>
+    <div class="container mt-3">
+      <div class="mb-5">
+        <a th:href="@{/tags}" class="text-info">
+          <i class="fa-solid fa-tags"></i>
+          タグ設定
+        </a>
+        <hr>
+      </div>
+
+      <div th:replace="~{fragment :: aside}"></div>
+
+    </div>
+  </aside>
+
+
   <main class="py-5">
     <div class="container mt-3">
-      <div class="row justify-content-center">
-        <div class="col-xl-5 col-lg-6 col-md-8">
-          <div class="d-flex justify-content-between mt-3">
-            <h5 class="page-title">
-              <i class="fa-solid fa-gear"></i>
-              カテゴリー設定
-            </h5>
-            <a th:if="${!categories.isEmpty()}" href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-              <i class="fa-solid fa-folder-plus"></i>
-              追加
-            </a>
-          </div>
-          <div th:if="${!categories.isEmpty()}" class="mt-5">
-            <ul>
-              <li th:each="category : ${categories}">
-                <div class="container d-flex justify-content-between">
-                  <p th:text="${category.getName()}"></p>
-                  <p>
-                    <a href="#" class="text-success" data-bs-toggle="modal" th:data-bs-target="${'#editCategoryModal' + category.getId()}">
-                      <i class="fa-solid fa-pencil"></i>
-                    </a>
-                    <span>｜</span>
-                    <a href="#" class="text-danger" data-bs-toggle="modal" th:data-bs-target="${'#delCategoryModal' + category.getId()}">
-                      <i class="fa-solid fa-trash-can"></i>
-                    </a>
-                  </p>
-                </div>
-                <hr>
-
-                <!-- 編集モーダル -->
-                <div class="modal fade" th:id="${'editCategoryModal' + category.getId()}" tabindex="-1">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <div class="modal-title fw-bold">カテゴリー編集</div>
-                      </div>
-                      <form th:action="@{/categories/__${category.getId()}__/update}" method="post" th:object="${categoryEditForm}">
-                        <input type="hidden" name="id" th:value="${category.getId()}">
-                        <input type="hidden" th:field="*{userId}">
-                        <div class="modal-body">
-                          <input type="text" class="form-control" name="name" th:value="${category.getName()}" pattern=".*\S+.*" title="スペース禁止">
-                        </div>
-                        <div class="modal-footer">
-                          <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                          <button type="submit" class="btn btn-success">更新</button>
-                        </div>
-                      </form>
-                    </div>
+      <div class="col-aside mt-4">
+        <div class="row justify-content-center">
+          <div class="col-xl-5 col-lg-6 col-md-8">
+            <div class="d-flex justify-content-between mt-3">
+              <h5 class="page-title">
+                <i class="fa-solid fa-gear"></i>
+                カテゴリー設定
+              </h5>
+              <a th:if="${!categories.isEmpty()}" href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                <i class="fa-solid fa-folder-plus"></i>
+                追加
+              </a>
+            </div>
+            <div th:if="${!categories.isEmpty()}" class="mt-5">
+              <ul>
+                <li th:each="category : ${categories}">
+                  <div class="container d-flex justify-content-between">
+                    <p th:text="${category.getName()}"></p>
+                    <p>
+                      <a href="#" class="text-success" data-bs-toggle="modal" th:data-bs-target="${'#editCategoryModal' + category.getId()}">
+                        <i class="fa-solid fa-pencil"></i>
+                      </a>
+                      <span>｜</span>
+                      <a href="#" class="text-danger" data-bs-toggle="modal" th:data-bs-target="${'#delCategoryModal' + category.getId()}">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </a>
+                    </p>
                   </div>
-                </div>
-
-                <!-- 削除モーダル -->
-                <div class="modal fade" th:id="${'delCategoryModal' + category.getId()}" tabindex="-1">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <div class="modal-title fw-bold" th:text="${category.getName() + ' 削除'}"></div>
-                      </div>
-                      <div class="modal-body">
-                        <p class="text-danger">※注意</p>
-                        <p>カテゴリーを削除すると、それに紐付いた支払いデータも全て削除されます。</p>
-                        <p>本当によろしいですか？</p>
-                      </div>
-                      <div class="modal-footer">
-                        <form th:action="@{/categories/__${category.getId()}__/delete}" method="post">
-                          <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                          <button type="submit" class="btn btn-danger">削除</button>
+                  <hr>
+  
+                  <!-- 編集モーダル -->
+                  <div class="modal fade" th:id="${'editCategoryModal' + category.getId()}" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <div class="modal-title fw-bold">カテゴリー編集</div>
+                        </div>
+                        <form th:action="@{/categories/__${category.getId()}__/update}" method="post" th:object="${categoryEditForm}">
+                          <input type="hidden" name="id" th:value="${category.getId()}">
+                          <input type="hidden" th:field="*{userId}">
+                          <div class="modal-body">
+                            <input type="text" class="form-control" name="name" th:value="${category.getName()}" pattern=".*\S+.*" title="スペース禁止">
+                          </div>
+                          <div class="modal-footer">
+                            <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-success">更新</button>
+                          </div>
                         </form>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div th:unless="${!categories.isEmpty()}" class="mt-5">
-            <h5 class="text-center text-secondary">
-              <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
-              <p class="mt-3">カテゴリーがありません</p>
-              <small>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                  <i class="fa-solid fa-folder-plus"></i>
-                  追加
-                </a>
-              </small>
-            </h5>
+  
+                  <!-- 削除モーダル -->
+                  <div class="modal fade" th:id="${'delCategoryModal' + category.getId()}" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <div class="modal-title fw-bold" th:text="${category.getName() + ' 削除'}"></div>
+                        </div>
+                        <div class="modal-body">
+                          <p class="text-danger">※注意</p>
+                          <p>カテゴリーを削除すると、それに紐付いた支払いデータも全て削除されます。</p>
+                          <p>本当によろしいですか？</p>
+                        </div>
+                        <div class="modal-footer">
+                          <form th:action="@{/categories/__${category.getId()}__/delete}" method="post">
+                            <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-danger">削除</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div th:unless="${!categories.isEmpty()}" class="mt-5">
+              <h5 class="text-center text-secondary">
+                <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
+                <p class="mt-3">カテゴリーがありません</p>
+                <small>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                    <i class="fa-solid fa-folder-plus"></i>
+                    追加
+                  </a>
+                </small>
+              </h5>
+            </div>
           </div>
         </div>
       </div>
@@ -133,8 +159,12 @@
     </div>
   </main>
 
-  <div th:replace="~{fragment :: footer}"></div>
+  <div class="col-aside">
+    <div th:replace="~{fragment :: footer}"></div>
+  </div>
 
   <div th:replace="~{fragment :: scripts}"></div>
+  <script th:src="@{/js/aside.js}"></script>
+
 </body>
 </html>

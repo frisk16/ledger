@@ -1,6 +1,8 @@
 package com.example.ledger.entity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -21,6 +25,14 @@ public class Tag {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Integer id;
+
+  @ManyToMany
+  @JoinTable(
+    name = "tag_payment",
+    joinColumns = @JoinColumn(name = "tag_id"),
+    inverseJoinColumns = @JoinColumn(name = "payment_id")
+  )
+  private List<Payment> payments = new ArrayList<>();
 
   @ManyToOne
   @JoinColumn(name = "user_id")

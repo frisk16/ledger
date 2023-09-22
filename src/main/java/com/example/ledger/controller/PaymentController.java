@@ -247,7 +247,7 @@ public class PaymentController {
   }
 
   // 支払い方法のリスト
-  private String[] allMethods() {
+  public String[] allMethods() {
     String[] methods = {
       "現金",
       "クレジット",
@@ -260,7 +260,7 @@ public class PaymentController {
   }
 
   // 支払い方法のアイコン
-  private HashMap<String, String> methodIcons() {
+  public HashMap<String, String> methodIcons() {
     HashMap<String, String> methodIcons = new HashMap<>();
 
     methodIcons.put("現金", "fa-3x fa-solid fa-coins");

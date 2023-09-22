@@ -21,23 +21,41 @@
       <span th:text="${successMessage}"></span>
     </div>
 
-    <div id="carouselContent" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img th:src="@{/img/home_img.jpg}" class="img-fluid">
-          <div class="carousel-caption">
-            <h5 class="title">帳簿管理ページ</h5>
-          </div>
+    <div class="background"></div>
+    <a href="#" id="paymentsOpenMenuBtn">
+      <i class="fa-2x fa-solid fa-bars"></i>
+    </a>
+    <aside>
+      <div class="d-flex justify-content-between mb-3">
+        <h5>MENU</h5>
+        <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
+      </div>
+      <div class="container">
+        <div th:replace="~{fragment :: aside}"></div>
+        <div class="mb-5">
+          <p class="fw-bold">各種ページ</p>
+          <hr>
+          <ul>
+            <li><a th:href="@{/payments}">家計簿</a></li>
+            <li><a href="#">部品管理</a></li>
+          </ul>
         </div>
       </div>
-    </div>
-    <div class="container mt-3">
-      Hello
+
+    </aside>  
+
+    <div class="col-aside">
+      <div class="container mt-5">
+        準備中
+      </div>
     </div>
   </main>
 
-  <div th:replace="~{fragment :: footer}"></div>
+  <div class="col-aside">
+    <div th:replace="~{fragment :: footer}"></div>
+  </div>
 
   <div th:replace="~{fragment :: scripts}"></div>
+  <script th:src="@{/js/aside.js}"></script>
 </body>
 </html>
