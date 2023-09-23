@@ -10,5 +10,6 @@ import com.example.ledger.entity.User;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
   
   public List<Tag> findByUserOrderByCreatedAtDesc(User user);
+  public Tag findByUserAndName(User user, String name);
 
 }

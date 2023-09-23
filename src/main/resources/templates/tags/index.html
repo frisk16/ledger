@@ -47,24 +47,53 @@
       <div class="col-aside mt-4">
         <div class="row justify-content-center">
           <div class="col-xl-8 col-lg-9 col-md-10">
-            <div class="d-flex justify-content-between mt-3">
-              <h5 class="page-title">
-                <i class="fa-solid fa-tags"></i>
-                タグ一覧
-              </h5>
-              <a href="#">
-                <i class="fa-solid fa-folder-plus"></i>
-                追加
-              </a>
-            </div>
+
+            <h5 class="page-title mt-3">
+              <i class="fa-solid fa-tags"></i>
+              タグ一覧
+            </h5>
+            <form th:action="@{/tags/create}" method="post" th:object="${tagRegisterForm}">
+              <input type="hidden" th:field="*{userId}">
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="name" class="col-form-label">タグ追加：</label>
+                </div>
+                <div class="form-group col-md-9 text-form">
+                  <input type="text" th:field="*{name}" class="form-control" placeholder="10文字以内">
+                  <button type="submit" class="btn btn-primary">追加</button>
+                </div>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></div>
+              </div>
+            </form>
+
             <div th:if="${!tags.isEmpty()}" class="mt-5">
               <p>タグ詳細</p>
               <hr>
               <div class="row">
-                <div th:each="tag : ${tags}" class="col-md-3 col-4">
+                <div th:each="tag : ${tags}" class="col-md-3 col-4 mb-3">
                   <a th:href="@{/tags/__${tag.getId()}__}" class="btn btn-success" th:text="${tag.getName()}"></a>
-                  <a href="#" class="btn-close ms-2"></a>
+                  <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#delTagModal' + tag.getId()}" class="btn-close ms-2"></a>
+
+                  <!-- タグ削除モーダル -->
+                  <div class="modal fade" th:id="${'delTagModal' + tag.getId()}" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <p class="modal-title" th:text="${'「' + tag.getName() + '」タグを削除します、よろしいですか？'}"></p>
+                        </div>
+                        <div class="modal-footer">
+                          <form th:action="@{/tags/__${tag.getId()}__/delete}" method="post">
+                            <span data-bs-dismiss="modal" class="btn btn-secondary">閉じる</span>
+                            <button type="submit" class="btn btn-danger">削除</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
+
+
               </div>
             </div>
             <div th:unless="${!tags.isEmpty()}" class="mt-5">
