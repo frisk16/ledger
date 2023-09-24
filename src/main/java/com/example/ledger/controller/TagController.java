@@ -3,6 +3,10 @@ package com.example.ledger.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.ledger.entity.Payment;
 import com.example.ledger.entity.Tag;
+import com.example.ledger.entity.TagPayment;
 import com.example.ledger.entity.User;
 import com.example.ledger.form.TagRegisterForm;
+import com.example.ledger.repository.TagPaymentRepository;
 import com.example.ledger.repository.TagRepository;
 import com.example.ledger.security.UserDetailsImpl;
 import com.example.ledger.service.TagService;
@@ -30,15 +35,18 @@ public class TagController {
   
   private final TagRepository tagRepository;
   private final TagService tagService;
+  private final TagPaymentRepository tagPaymentRepository;
   private final PaymentController paymentController;
 
   public TagController(
     TagRepository tagRepository,
     TagService tagService,
+    TagPaymentRepository tagPaymentRepository,
     PaymentController paymentController
   ) {
     this.tagRepository = tagRepository;
     this.tagService = tagService;
+    this.tagPaymentRepository = tagPaymentRepository;
     this.paymentController = paymentController;
   }
 
@@ -61,6 +69,7 @@ public class TagController {
   public String show(
     @PathVariable(name = "id") Integer id,
     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
     Model model
   ) {
     User user = userDetailsImpl.getUser();
@@ -72,8 +81,8 @@ public class TagController {
 
     HashMap<String, String> methodIcons = this.paymentController.methodIcons();
 
-    List<Payment> payments = tag.getPayments();
-    model.addAttribute("payments", payments);
+    Page<TagPayment> lists = this.tagPaymentRepository.findByTag(tag, pageable);
+    model.addAttribute("lists", lists);
     model.addAttribute("tags", tags);
     model.addAttribute("tag", tag);
     model.addAttribute("methodIcons", methodIcons);
