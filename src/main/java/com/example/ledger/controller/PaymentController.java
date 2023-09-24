@@ -87,15 +87,31 @@ public class PaymentController {
     LocalDate endDate = startDate.plusMonths(1).minusDays(1);
     
     Page<Payment> payments;
+    int totalPrice = 0;
+    int progressBarSize;
     if(categoryId != null) {
       Category category = this.categoryRepository.getReferenceById(categoryId);
       payments = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateDescCreatedAtDesc(user, category, startDate, endDate, pageable);
+      List<Payment> paymentLists = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateDescCreatedAtDesc(user, category, startDate, endDate);
+      for(int i = 0; i < paymentLists.size(); i++) {
+        int price = paymentLists.get(i).getPrice();
+        totalPrice += price;
+      }
+      progressBarSize = (int)(((double)totalPrice / 100000) * 100);
     } else {
       payments = this.paymentRepository.findByUserAndDateBetweenOrderByDateDescCreatedAtDesc(user, startDate, endDate, pageable);
+      List<Payment> paymentLists = this.paymentRepository.findByUserAndDateBetweenOrderByDateDescCreatedAtDesc(user, startDate, endDate);
+      for(int i = 0; i < paymentLists.size(); i++) {
+        int price = paymentLists.get(i).getPrice();
+        totalPrice += price;
+      }
+      progressBarSize = (int)(((double)totalPrice / 100000) * 100);
     }
 
     model.addAttribute("categories", categories);
     model.addAttribute("payments", payments);
+    model.addAttribute("totalPrice", totalPrice);
+    model.addAttribute("progressBarSize", progressBarSize);
     model.addAttribute("methodIcons", this.methodIcons());
     model.addAttribute("year", year);
     model.addAttribute("month", month);

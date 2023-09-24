@@ -37,7 +37,7 @@
       <div>
         <a th:href="@{/tags}" class="text-info">
           <i class="fa-solid fa-tags"></i>
-          タグ設定
+          タグ詳細
         </a>
       </div>
       <hr>
@@ -120,6 +120,13 @@
             </span>
           </span>
         </p>
+        <div class="mb-4">
+          <strong class="text-success" th:text="${'合計金額：￥' + #numbers.formatInteger(totalPrice, 1, 'COMMA') + '円'}"></strong>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" th:aria-valuenow="${progressBarSize}" th:style="${'width: ' + progressBarSize + '%'}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <p class="text-center" th:text="${#numbers.formatInteger(totalPrice, 1, 'COMMA') + '円／100,000円'}"></p>
+        </div>
 
         <!-- 日付選択用モーダル -->
         <div class="modal fade" id="paymentSelectDateModal" tabindex="-1">

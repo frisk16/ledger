@@ -63,6 +63,16 @@ ul {
     margin-left: 8px;
   }
 
+  .nav-item.dropdown > .nav-link {
+    width: 12rem;
+    text-align: center;
+  }
+
+  .nav-link {
+    text-align: center;
+    width: 6rem;
+  }
+
 }
 
 
@@ -150,6 +160,11 @@ aside a:hover {
 .text-form > button {
   width: 64px;
   border-radius: 0 8px 8px 0;
+}
+
+.progress {
+  height: 8px;
+  background-color: #ccc;
 }
 
 @media screen and (max-width: 767px) {
