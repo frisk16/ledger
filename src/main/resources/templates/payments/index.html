@@ -94,6 +94,18 @@
           </a>
         </div>
 
+        <div class="d-flex justify-content-between mb-3">
+          <form th:action="@{/payments}" method="get">
+            <input th:if="${year}" type="hidden" name="year" th:value="${year}">
+            <input th:if="${month}" type="hidden" name="month" th:value="${month}">
+            <input th:if="${categoryId}" type="hidden" name="categoryId" th:value="${categoryId}">
+            <select name="sort" class="form-select form-select-sm" onChange="this.form.submit();">
+              <option th:selected="${sort == 'DESC' || sort == null}" value="DESC">日付が新しい順</option>
+              <option th:selected="${sort == 'ASC'}" value="ASC">日付が古い順</option>
+            </select>
+          </form>
+        </div>
+
         <!-- 日付表示 -->
         <p class="mb-4 ms-3 fw-bold border-bottom border-secondary">
           <a th:if="${month > 1}" th:href="@{/payments(year = ${year}, month = ${month - 1})}" class="me-3">
@@ -347,15 +359,15 @@
                   <ul class="pagination">
                     <li class="page-item">
                       <span th:if="${payments.isFirst()}" class="page-link disabled">前</span>
-                      <a th:unless="${payments.isFirst()}" th:href="@{/payments(page = ${payments.getNumber() - 1}, year = ${year}, month = ${month}, categoryId = ${categoryId})}" class="page-link">前</a>
+                      <a th:unless="${payments.isFirst()}" th:href="@{/payments(page = ${payments.getNumber() - 1}, year = ${year}, month = ${month}, categoryId = ${categoryId}, sort = ${sort})}" class="page-link">前</a>
                     </li>
                     <li th:each="i : ${#numbers.sequence(0, payments.getTotalPages() - 1)}" class="page-item">
                       <span th:if="${i == payments.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
-                      <a th:unless="${i == payments.getNumber()}" th:href="@{/payments(page = ${i}, year = ${year}, month = ${month}, categoryId = ${categoryId})}" class="page-link" th:text="${i + 1}"></a>
+                      <a th:unless="${i == payments.getNumber()}" th:href="@{/payments(page = ${i}, year = ${year}, month = ${month}, categoryId = ${categoryId}, sort = ${sort})}" class="page-link" th:text="${i + 1}"></a>
                     </li>
                     <li class="page-item">
                       <span th:if="${payments.isLast()}" class="page-link disabled">次</span>
-                      <a th:unless="${payments.isLast()}" th:href="@{/payments(page = ${payments.getNumber() + 1}, year = ${year}, month = ${month}, categoryId = ${categoryId})}" class="page-link">次</a>
+                      <a th:unless="${payments.isLast()}" th:href="@{/payments(page = ${payments.getNumber() + 1}, year = ${year}, month = ${month}, categoryId = ${categoryId}, sort = ${sort})}" class="page-link">次</a>
                     </li>
                   </ul>
                 </nav>

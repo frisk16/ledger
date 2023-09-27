@@ -59,6 +59,7 @@ public class PaymentController {
     @RequestParam(name = "year", required = false) Integer year,
     @RequestParam(name = "month", required = false) Integer month,
     @RequestParam(name = "categoryId", required = false) Integer categoryId,
+    @RequestParam(name = "sort", required = false) String sort,
     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
     @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
     Model model
@@ -91,21 +92,29 @@ public class PaymentController {
     int progressBarSize;
     if(categoryId != null) {
       Category category = this.categoryRepository.getReferenceById(categoryId);
-      payments = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateDescCreatedAtDesc(user, category, startDate, endDate, pageable);
-      List<Payment> paymentLists = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateDescCreatedAtDesc(user, category, startDate, endDate);
+      List<Payment> paymentLists = this.paymentRepository.findByUserAndCategoryAndDateBetween(user, category, startDate, endDate);
       for(int i = 0; i < paymentLists.size(); i++) {
         int price = paymentLists.get(i).getPrice();
         totalPrice += price;
       }
       progressBarSize = (int)(((double)totalPrice / 100000) * 100);
+      if(sort != null && sort.equals("ASC")) {
+        payments = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateAscCreatedAtAsc(user, category, startDate, endDate, pageable);
+      } else {
+        payments = this.paymentRepository.findByUserAndCategoryAndDateBetweenOrderByDateDescCreatedAtDesc(user, category, startDate, endDate, pageable);
+      }
     } else {
-      payments = this.paymentRepository.findByUserAndDateBetweenOrderByDateDescCreatedAtDesc(user, startDate, endDate, pageable);
-      List<Payment> paymentLists = this.paymentRepository.findByUserAndDateBetweenOrderByDateDescCreatedAtDesc(user, startDate, endDate);
+      List<Payment> paymentLists = this.paymentRepository.findByUserAndDateBetween(user, startDate, endDate);
       for(int i = 0; i < paymentLists.size(); i++) {
         int price = paymentLists.get(i).getPrice();
         totalPrice += price;
       }
       progressBarSize = (int)(((double)totalPrice / 100000) * 100);
+      if(sort != null && sort.equals("ASC")) {
+        payments = this.paymentRepository.findByUserAndDateBetweenOrderByDateAscCreatedAtAsc(user, startDate, endDate, pageable);
+      } else {
+        payments = this.paymentRepository.findByUserAndDateBetweenOrderByDateDescCreatedAtDesc(user, startDate, endDate, pageable);
+      }
     }
 
     model.addAttribute("categories", categories);
@@ -120,6 +129,7 @@ public class PaymentController {
     model.addAttribute("currentMonth", currentMonth);
     model.addAttribute("paymentTagsForm", new PaymentTagsForm());
     model.addAttribute("tags", tags);
+    model.addAttribute("sort", sort);
     
     return "payments/index";
   }

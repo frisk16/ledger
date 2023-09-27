@@ -29,7 +29,7 @@ ul {
   left: 15%;
   right: 15%;
   animation-name: alert;
-  animation-duration: 4s;
+  animation-duration: 2.5s;
 }
 
 @keyframes alert {

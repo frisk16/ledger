@@ -80,9 +80,11 @@
               <p>タグ詳細</p>
               <hr>
               <div class="row">
-                <div th:each="tag : ${tags}" class="col-md-3 col-4 mb-3">
-                  <a th:href="@{/tags/__${tag.getId()}__}" class="btn btn-success" th:text="${tag.getName()}"></a>
-                  <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#delTagModal' + tag.getId()}" class="btn-close ms-2"></a>
+                <div th:each="tag : ${tags}" class="col-md-3 col-6 mb-3">
+                  <div>
+                    <a th:href="@{/tags/__${tag.getId()}__}" class="btn btn-success" th:text="${tag.getName()}"></a>
+                    <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#delTagModal' + tag.getId()}" class="btn-close ms-2"></a>
+                  </div>
 
                   <!-- タグ削除モーダル -->
                   <div class="modal fade" th:id="${'delTagModal' + tag.getId()}" tabindex="-1">
