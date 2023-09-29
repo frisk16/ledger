@@ -24,6 +24,15 @@
 </head>
 <body>
 
+  <!-- openAsideButton -->
+  <div th:fragment="openAsideButton" th:remove="tag">
+    <div class="background"></div>
+    <a href="#" id="paymentsOpenMenuBtn" class="d-flex flex-column justify-content-center align-items-center">
+      <i class="fa-2x fa-solid fa-bars"></i>
+      <small>MENU</small>
+    </a>
+  </div>
+
   <!-- aside -->
   <div th:fragment="aside" th:remove="tag">
     <div sec:authorize="isAuthenticated()" class="mb-5">

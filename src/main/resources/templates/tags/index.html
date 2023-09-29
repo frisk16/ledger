@@ -18,10 +18,8 @@
     <span th:text="${successMsg}"></span>
   </div>
 
-  <div class="background"></div>
-  <a href="#" id="paymentsOpenMenuBtn">
-    <i class="fa-2x fa-solid fa-bars"></i>
-  </a>
+  <div th:replace="~{fragment :: openAsideButton}"></div>
+
   <aside>
     <div class="d-flex justify-content-between">
       <h5>MENU</h5>

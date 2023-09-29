@@ -134,6 +134,15 @@ public class PaymentController {
     return "payments/index";
   }
 
+  @GetMapping("/search")
+  public String search(
+    @RequestParam(name = "keyword") String keyword,
+    Model model
+  ) {
+
+    return "";
+  }
+
   @GetMapping("/add")
   public String add(
     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
