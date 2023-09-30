@@ -36,16 +36,16 @@ ul {
 
 .alert-warning {
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 80px;
   left: 15%;
   right: 15%;
 }
 
 @keyframes alert {
-  0% { opacity: 0; z-index: 1; }
-  10% { opacity: 0.9; z-index: 1; }
-  90% { opacity: 0.9; z-index: 1; }
+  0% { opacity: 0; z-index: 2; }
+  10% { opacity: 0.9; z-index: 2; }
+  90% { opacity: 0.9; z-index: 2; }
   100% { opacity: 0; }
 }
 
@@ -132,7 +132,7 @@ ul {
   bottom: 50%;
   height: 5rem;
   padding: 8px;
-  background-color: rgba(100, 100, 100, 0.5);
+  background-color: rgba(100, 100, 100, 0.8);
   border: 1px solid #ff0;
   border-left: none;
   border-radius: 0 8px 8px 0;
@@ -142,6 +142,7 @@ ul {
 
 aside {
   position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
   bottom: 0;
@@ -206,6 +207,7 @@ aside a:hover {
 
   #paymentsOpenMenuBtn {
     display: block;
+    z-index: 1;
   }
 
   .col-aside {
