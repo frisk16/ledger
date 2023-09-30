@@ -3,19 +3,13 @@
 <head>
   <div th:replace="~{fragment :: meta}"></div>
   <div th:replace="~{fragment :: styles}"></div>
-  <title>家計簿TOP</title>
+  <title>検索結果</title>
 </head>
 <body>
   <div th:replace="~{fragment :: header}"></div>
 
   <div th:if="${param.continue}" class="alert alert-primary text-center">
     ログインしました
-  </div>
-  <div th:if="${successMsg}" class="alert alert-success text-center">
-    <span th:text="${successMsg}"></span>
-  </div>
-  <div th:if="${errorMsg}" class="alert alert-danger text-center">
-    <span th:text="${errorMsg}"></span>
   </div>
   
   <div th:replace="~{fragment :: openAsideButton}"></div>
@@ -27,6 +21,12 @@
     </div>
     <div class="container mt-3">
       <ul>
+        <li>
+          <a th:href="@{/payments}">
+            <i class="fa-solid fa-piggy-bank"></i>
+            家計簿TOPへ戻る
+          </a>
+        </li>
         <li>
           <a th:href="@{/categories}">
             <i class="fa-solid fa-gear"></i>
@@ -41,36 +41,6 @@
         </li>
       </ul>
       <hr>
-      <div th:if="${!categories.isEmpty()}" class="mt-3 mb-5">
-        <ul>
-          <li class="mb-3">
-            <div th:if="${categoryId == null}" class="text-info">
-              <i class="fa-solid fa-forward"></i>
-              <span class="fs-6 ms-2">全て</span>
-            </div>
-            <div th:unless="${categoryId == null}">
-              <i class="fa-solid fa-caret-right"></i>
-              <a th:href="@{/payments(year = ${year}, month = ${month})}" class="text-light fs-6 ms-2">全て</a>
-            </div>
-          </li>
-          <li th:each="category : ${categories}" class="mb-3">
-            <div th:if="${categoryId == category.getId()}" class="text-info">
-              <i class="fa-solid fa-forward"></i>
-              <span class="fs-6 ms-2" th:text="${category.getName()}"></span>
-            </div>
-            <div th:unless="${categoryId == category.getId()}">
-              <i class="fa-solid fa-caret-right"></i>
-              <a th:href="@{/payments(year = ${year}, month = ${month}, categoryId = ${category.getId()})}" th:text="${category.getName()}" class="text-light fs-6 ms-2"></a>
-            </div>
-          </li> 
-        </ul>
-      </div>
-      <div th:unless="${!categories.isEmpty()}" class="mt-3 mb-5">
-        <h6 class="text-center">
-          <i class="fa-3x fa-solid fa-triangle-exclamation"></i>
-          <p class="mt-3">カテゴリーがありません</p>
-        </h6>
-      </div>
 
       <div th:replace="~{fragment :: aside}"></div>
 
@@ -81,15 +51,12 @@
     <div class="container mt-3">
       <div class="col-aside mt-4">
 
-        <div class="d-flex justify-content-between py-3">
+        <div class="py-3">
           <h5 class="page-title">
             <i class="fa-solid fa-piggy-bank"></i>
-            家計簿ページTOP
+            <span th:text="${'検索結果｜' + keyword}"></span>
+            <p class="mt-3" th:text="${'全' + payments.totalElements + '件'}"></p>
           </h5>
-          <a th:if="${!categories.isEmpty()}" th:href="@{/payments/add}">
-            <i class="fa-solid fa-file-circle-plus"></i>
-            データ追加
-          </a>
         </div>
 
         <div class="d-flex flex-wrap justify-content-between mb-3">
@@ -97,106 +64,25 @@
           <!-- 検索フォーム -->
           <form th:action="@{/payments/search}" method="get" class="text-form mb-3">
             <select name="when" class="form-select">
-              <option value="thisYear">今年</option>
-              <option value="lastYear">去年</option>
+              <option th:selected="${when != 'lastYear'}" value="thisYear">今年</option>
+              <option th:selected="${when == 'lastYear'}" value="lastYear">去年</option>
             </select>
-            <input type="text" name="keyword" class="form-control" required placeholder="支払いタイトルで検索">
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" required placeholder="支払いタイトルで検索">
             <button type="submit" class="btn btn-primary">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
           </form>
 
           <!-- 日付並び替えフォーム -->
-          <form th:action="@{/payments}" method="get">
-            <input th:if="${year}" type="hidden" name="year" th:value="${year}">
-            <input th:if="${month}" type="hidden" name="month" th:value="${month}">
-            <input th:if="${categoryId}" type="hidden" name="categoryId" th:value="${categoryId}">
+          <form th:action="@{/payments/search}" method="get">
+            <input type="hidden" name="keyword" th:value="${keyword}">
+            <input type="hidden" name="when" th:value="${when}">
             <select name="sort" class="form-select form-select-sm" onChange="this.form.submit();">
               <option th:selected="${sort == 'DESC' || sort == null}" value="DESC">日付が新しい順</option>
               <option th:selected="${sort == 'ASC'}" value="ASC">日付が古い順</option>
             </select>
           </form>
 
-        </div>
-
-        <!-- 日付表示 -->
-        <p class="mb-4 ms-3 fw-bold border-bottom border-secondary">
-          <a th:if="${month > 1}" th:href="@{/payments(year = ${year}, month = ${month - 1})}" class="me-3">
-            <i class="fa-solid fa-chevron-left"></i>
-            <small>前月</small>
-          </a>
-          <span th:unless="${month > 1}" class="text-secondary me-3">
-            <i class="fa-solid fa-chevron-left"></i>
-            <small>前月</small>
-          </span>
-          <a href="#" data-bs-toggle="modal" data-bs-target="#paymentSelectDateModal" class="text-dark fs-3">
-            <span th:text="${year + '年'}"></span>
-            <span th:text="${month + '月'}"></span>
-          </a>
-          <span th:if="${year == currentYear && month == currentMonth}">
-            <span class="text-secondary ms-3">
-              <small>翌月</small>
-              <i class="fa-solid fa-chevron-right"></i>
-            </span>
-          </span>
-          <span th:unless="${year == currentYear && month == currentMonth}">
-            <a th:if="${month < 12}" th:href="@{/payments(year = ${year}, month = ${month + 1})}" class="ms-3">
-              <small>翌月</small>
-              <i class="fa-solid fa-chevron-right"></i>
-            </a>
-            <span th:unless="${month < 12}" class="text-secondary ms-3">
-              <small>翌月</small>
-              <i class="fa-solid fa-chevron-right"></i>
-            </span>
-          </span>
-        </p>
-        <div class="mb-4">
-          <strong class="text-success" th:text="${'合計金額：￥' + #numbers.formatInteger(totalPrice, 1, 'COMMA') + '円'}"></strong>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" th:aria-valuenow="${progressBarSize}" th:style="${'width: ' + progressBarSize + '%'}" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <p class="text-center" th:text="${#numbers.formatInteger(totalPrice, 1, 'COMMA') + '円／100,000円'}"></p>
-        </div>
-
-        <!-- 日付選択用モーダル -->
-        <div class="modal fade" id="paymentSelectDateModal" tabindex="-1">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-body">
-                <div class="container-fluid">
-                  <div class="row mb-3 align-items-center">
-                    <div class="col-2 text-center">
-                      <a th:href="@{/payments(year = ${year - 1}, month = ${month})}" class="btn btn-outline-primary">
-                        <i class="fa-solid fa-chevron-left"></i>
-                      </a>
-                    </div>
-                    <div class="col-8 text-center">
-                      <h4 th:text="${year + '年'}"></h4>
-                    </div>
-                    <div class="col-2 text-center">
-                      <span th:if="${year == currentYear}" class="btn btn-outline-secondary disabled">
-                        <i class="fa-solid fa-chevron-right"></i>
-                      </span>
-                      <a th:unless="${year == currentYear}" th:href="@{/payments(year = ${year + 1}, month = ${month})}" class="btn btn-outline-primary">
-                        <i class="fa-solid fa-chevron-right"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <span class="col-3 p-1" th:each="i : ${#numbers.sequence(1, 12)}">
-                      <div th:if="${year == currentYear && i > currentMonth}">
-                        <span class="btn btn-outline-secondary disabled w-100" th:text="${i + '月'}"></span>
-                      </div>
-                      <div th:unless="${year == currentYear && i > currentMonth}">
-                        <span th:if="${i == month}" class="btn btn-primary disabled w-100" th:text="${i + '月'}"></span>
-                        <a th:unless="${i == month}" th:href="@{/payments(year = ${year}, month = ${i})}" class="btn btn-outline-primary w-100" th:text="${i + '月'}"></a>
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- 支払いデータ一覧 -->
@@ -372,15 +258,15 @@
                   <ul class="pagination">
                     <li class="page-item">
                       <span th:if="${payments.isFirst()}" class="page-link disabled">前</span>
-                      <a th:unless="${payments.isFirst()}" th:href="@{/payments(page = ${payments.getNumber() - 1}, year = ${year}, month = ${month}, categoryId = ${categoryId}, sort = ${sort})}" class="page-link">前</a>
+                      <a th:unless="${payments.isFirst()}" th:href="@{/payments/search(page = ${payments.getNumber() - 1}, when = ${when}, keyword = ${keyword}, sort = ${sort})}" class="page-link">前</a>
                     </li>
                     <li th:each="i : ${#numbers.sequence(0, payments.getTotalPages() - 1)}" class="page-item">
                       <span th:if="${i == payments.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
-                      <a th:unless="${i == payments.getNumber()}" th:href="@{/payments(page = ${i}, year = ${year}, month = ${month}, categoryId = ${categoryId}, sort = ${sort})}" class="page-link" th:text="${i + 1}"></a>
+                      <a th:unless="${i == payments.getNumber()}" th:href="@{/payments/search(page = ${i}, when = ${when}, keyword = ${keyword}, sort = ${sort})}" class="page-link" th:text="${i + 1}"></a>
                     </li>
                     <li class="page-item">
                       <span th:if="${payments.isLast()}" class="page-link disabled">次</span>
-                      <a th:unless="${payments.isLast()}" th:href="@{/payments(page = ${payments.getNumber() + 1}, year = ${year}, month = ${month}, categoryId = ${categoryId}, sort = ${sort})}" class="page-link">次</a>
+                      <a th:unless="${payments.isLast()}" th:href="@{/payments/search(page = ${payments.getNumber() + 1}, when = ${when}, keyword = ${keyword}, sort = ${sort})}" class="page-link">次</a>
                     </li>
                   </ul>
                 </nav>
@@ -391,16 +277,8 @@
 
         <div th:unless="${!payments.isEmpty()}" class="container">
           <h5 class="text-center text-secondary">
-            <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
-            <p class="mt-3">支払いデータがありません</p>
-            <a th:if="${!categories.isEmpty()}" th:href="@{/payments/add}" class="small">
-              <i class="fa-solid fa-file-circle-plus"></i>
-              データ追加
-            </a>
-            <a th:unless="${!categories.isEmpty()}" th:href="@{/categories}" class="small">
-              <i class="fa-solid fa-folder-plus"></i>
-              まずカテゴリーから追加
-            </a>
+            <i class="fa-5x fa-solid fa-magnifying-glass"></i>
+            <p class="mt-3">支払いデータが見つかりませんでした</p>
           </h5>
         </div>
       </div>

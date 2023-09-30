@@ -11,19 +11,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.ledger.entity.User;
-import com.example.ledger.entity.VerificationToken;
 import com.example.ledger.repository.UserRepository;
-import com.example.ledger.repository.VerificationTokenRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   private final UserRepository userRepository;
-  private final VerificationTokenRepository verificationTokenRepository;
 
-  public UserDetailsServiceImpl(UserRepository userRepository, VerificationTokenRepository verificationTokenRepository) {
+  public UserDetailsServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.verificationTokenRepository = verificationTokenRepository;
   }
 
   @Override
@@ -35,12 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       Collection<GrantedAuthority> authorities = new ArrayList<>();
       authorities.add(new SimpleGrantedAuthority(userRoleName));
       
-      // トークン初期化
-      VerificationToken verificationToken = this.verificationTokenRepository.findByUser(user);
-      if(verificationToken != null) {
-        this.verificationTokenRepository.deleteById(verificationToken.getId());
-      }
-
       return new UserDetailsImpl(user, authorities);
 
     } catch (Exception e) {

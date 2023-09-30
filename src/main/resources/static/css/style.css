@@ -21,7 +21,9 @@ ul {
   list-style: none;
 }
 
-.alert {
+.alert-primary,
+.alert-success,
+.alert-danger {
   position: fixed;
   z-index: -1;
   opacity: 0;
@@ -30,6 +32,14 @@ ul {
   right: 15%;
   animation-name: alert;
   animation-duration: 2.5s;
+}
+
+.alert-warning {
+  position: fixed;
+  z-index: 1;
+  top: 80px;
+  left: 15%;
+  right: 15%;
 }
 
 @keyframes alert {
@@ -179,6 +189,8 @@ aside a:hover {
 .text-form > button {
   width: 64px;
   border-radius: 0 8px 8px 0;
+  border: 1px solid #aaa;
+  box-sizing: border-box;
 }
 
 .progress {

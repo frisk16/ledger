@@ -19,6 +19,7 @@ import com.example.ledger.form.ResetPasswordForm;
 import com.example.ledger.form.ResetPasswordMailForm;
 import com.example.ledger.form.UserRegisterForm;
 import com.example.ledger.repository.UserRepository;
+import com.example.ledger.repository.VerificationTokenRepository;
 import com.example.ledger.security.UserDetailsImpl;
 import com.example.ledger.service.UserService;
 import com.example.ledger.service.VerificationTokenService;
@@ -31,17 +32,20 @@ public class AuthController {
   private final UserService userService;
   private final UserRepository userRepository;
   private final SignupEventPublisher signupEventPublisher;
+  private final VerificationTokenRepository verificationTokenRepository;
   private final VerificationTokenService verificationTokenService;
   
   public AuthController(
     UserService userService,
     UserRepository userRepository,
     SignupEventPublisher signupEventPublisher,
+    VerificationTokenRepository verificationTokenRepository,
     VerificationTokenService verificationTokenService
   ) {
     this.userService = userService;
     this.userRepository = userRepository;
     this.signupEventPublisher = signupEventPublisher;
+    this.verificationTokenRepository = verificationTokenRepository;
     this.verificationTokenService = verificationTokenService;
   }
 
@@ -93,7 +97,7 @@ public class AuthController {
     User createdUser = this.userService.create(userRegisterForm);
     String requestUrl = new String(httpServletRequest.getRequestURL());
     this.signupEventPublisher.publishSignupEvent(createdUser, requestUrl);
-    redirectAttributes.addFlashAttribute("successMessage", "ご入力頂いたEメールアドレス宛に認証メールを送信しました。メールに記載されているリンクへアクセスし、登録を完了させてください。");
+    redirectAttributes.addFlashAttribute("successSendMsg", "ご入力頂いたEメールアドレス宛に認証メールを送信しました。メールに記載されているリンクへアクセスし、登録を完了させてください。");
   
     return "redirect:/";
   }
@@ -132,7 +136,7 @@ public class AuthController {
     User user = this.userRepository.findByEmail(email);
     String requestUrl = new String(httpServletRequest.getRequestURL());
     this.signupEventPublisher.publishSignupEvent(user, requestUrl);
-    redirectAttributes.addFlashAttribute("successMessage", "入力頂いたEメールアドレス宛にパスワード再設定メールを送信しました、ご確認ください");
+    redirectAttributes.addFlashAttribute("successSendMsg", "入力頂いたEメールアドレス宛にパスワード再設定メールを送信しました、ご確認ください");
 
     return "redirect:/";
   }
@@ -203,7 +207,12 @@ public class AuthController {
 
     if(verificationToken != null) {
       User user = verificationToken.getUser();
+      Integer tokenId = verificationToken.getId();
       this.userService.enableUser(user);
+
+      // 使用済トークン削除
+      this.verificationTokenRepository.deleteById(tokenId);
+
       model.addAttribute("successMessage", "設定が完了しました、ログインしてご確認ください");
     } else {
       model.addAttribute("errorMessage", "ページが無効です");

@@ -20,6 +20,9 @@
     <div class="alert alert-success" th:if="${successMessage}">
       <span th:text="${successMessage}"></span>
     </div>
+    <div class="alert alert-warning" th:if="${successSendMsg}">
+      <span th:text="${successSendMsg}"></span>
+    </div>
 
     <div th:replace="~{fragment :: openAsideButton}"></div>
 

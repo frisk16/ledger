@@ -136,11 +136,51 @@ public class PaymentController {
 
   @GetMapping("/search")
   public String search(
-    @RequestParam(name = "keyword") String keyword,
+    @RequestParam(name = "keyword", required = false) String keyword,
+    @RequestParam(name = "when", required = false) String when,
+    @RequestParam(name = "sort", required = false) String sort,
+    @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
     Model model
   ) {
+    
+    User user = userDetailsImpl.getUser();
+    List<Tag> tags = this.tagRepository.findByUserOrderByCreatedAtDesc(user);
+    Page<Payment> payments;
+    String formatYear = "";
 
-    return "";
+    if(keyword != null && when != null) {
+      if(when.equals("lastYear")) {
+        // 去年のデータ
+        Integer lastYear = LocalDate.now().getYear() - 1;
+        formatYear = lastYear.toString();
+      } else {
+        // 今年のデータ
+        Integer thisYear = LocalDate.now().getYear();
+        formatYear = thisYear.toString();
+      }
+      
+      LocalDate startDate = LocalDate.parse(formatYear + "-01-01");
+      LocalDate endDate = LocalDate.parse(formatYear + "-12-31");
+      if(sort != null && sort.equals("ASC")) {
+        payments = this.paymentRepository.findByUserAndDateBetweenAndNameLikeOrderByDateAsc(user, startDate, endDate, "%" + keyword + "%", pageable);
+      } else {
+        payments = this.paymentRepository.findByUserAndDateBetweenAndNameLikeOrderByDateDesc(user, startDate, endDate, "%" + keyword + "%", pageable);
+      }
+
+      model.addAttribute("payments", payments);
+      model.addAttribute("keyword", keyword);
+      model.addAttribute("methodIcons", this.methodIcons());
+      model.addAttribute("paymentTagsForm", new PaymentTagsForm());
+      model.addAttribute("tags", tags);
+      model.addAttribute("when", when);
+      model.addAttribute("sort", sort);
+
+    } else {
+      return "redirect:/payments";
+    }
+
+    return "payments/search";
   }
 
   @GetMapping("/add")
