@@ -54,7 +54,7 @@
       <div class="col-aside mt-4">
 
         <div class="d-flex justify-content-between py-3">
-          <h5 class="page-title" th:text="${tag.getName() + 'タグ｜支払いデータ'}"></h5>
+          <h5 class="page-title" th:text="${'タグ詳細｜' + tag.getName()}"></h5>
           <a th:href="@{/tags/__${tag.getId()}__/edit}">
             <i class="fa-solid fa-tags"></i>
             タグ名編集

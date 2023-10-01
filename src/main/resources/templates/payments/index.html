@@ -130,8 +130,7 @@
             <small>前月</small>
           </span>
           <a href="#" data-bs-toggle="modal" data-bs-target="#paymentSelectDateModal" class="text-dark fs-3">
-            <span th:text="${year + '年'}"></span>
-            <span th:text="${month + '月'}"></span>
+            <span th:text="${year + '年 ' + month + '月'}"></span>
           </a>
           <span th:if="${year == currentYear && month == currentMonth}">
             <span class="text-secondary ms-3">
@@ -279,7 +278,7 @@
 
               <div class="row">
                 <div class="col-12">
-                  <span th:if="${payment.getTags().isEmpty()}" class="d-flex justify-content-between">
+                  <span th:if="${payment.getTags().isEmpty()}" class="d-flex justify-content-between align-items-center">
                     <span>
                       分類タグ：
                       <span class="badge bg-danger">無し</span>
