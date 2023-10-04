@@ -17,11 +17,16 @@
 
   <main class="py-5">
 
-    <div class="alert alert-success" th:if="${successMessage}">
-      <span th:text="${successMessage}"></span>
+    <div class="alert alert-success" th:if="${successMsg}">
+      <span th:text="${successMsg}"></span>
     </div>
-    <div class="alert alert-warning" th:if="${successSendMsg}">
+    <div class="alert alert-warning text-center" th:if="${successSendMsg}">
+      <i class="fa-solid fa-triangle-exclamation"></i>
       <span th:text="${successSendMsg}"></span>
+    </div>
+    <div class="alert alert-warning text-center" th:if="${warningMsg}">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span th:text="${warningMsg}"></span>
     </div>
 
     <div th:replace="~{fragment :: openAsideButton}"></div>
@@ -98,7 +103,7 @@
         <div sec:authorize="isAuthenticated()">
           <h5 class="title">会員設定</h5>
           <div class="row justify-content-center">
-            <a href="#" class="col-lg-5 col-10 mb-5 top-link">
+            <a th:href="@{/mypage/edit}" class="col-lg-5 col-10 mb-5 top-link">
               <div class="row align-items-center justify-content-between">
                 <div class="col-3">
                   <i class="fa-4x fa-solid fa-user-pen"></i>

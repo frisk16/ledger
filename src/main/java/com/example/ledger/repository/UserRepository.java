@@ -7,5 +7,6 @@ import com.example.ledger.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
   public User findByEmail(String email);
+  public User findByName(String name);
 
 }

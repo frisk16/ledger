@@ -8,11 +8,11 @@
 <body>
   <div th:replace="~{fragment :: header}"></div>
 
-  <div th:if="${successMessage}" class="alert alert-success text-center">
-    <span th:text="${successMessage}"></span>
+  <div th:if="${successMsg}" class="alert alert-success text-center">
+    <span th:text="${successMsg}"></span>
   </div>
-  <div th:if="${errorMessage}" class="alert alert-danger text-center">
-    <span th:text="${errorMessage}"></span>
+  <div th:if="${errorMsg}" class="alert alert-danger text-center">
+    <span th:text="${errorMsg}"></span>
   </div>
 
   <main class="py-5">

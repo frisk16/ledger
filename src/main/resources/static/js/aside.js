@@ -17,7 +17,7 @@ window.addEventListener('resize', () => {
 openMenuBtn.addEventListener('click', e => {
   e.preventDefault();
   background.style.opacity = '0.5';
-  background.style.zIndex = '0';
+  background.style.zIndex = '1';
   aside.style.transform = 'translateX(0)';
 });
 

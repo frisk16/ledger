@@ -188,7 +188,7 @@ public class AuthController {
 
     this.userService.editPassword(resetPasswordForm);
 
-    redirectAttributes.addFlashAttribute("successMessage", "パスワードの再設定が完了しました");
+    redirectAttributes.addFlashAttribute("successMsg", "パスワードの再設定が完了しました");
 
     return "redirect:/register/verify?token=" + resetPasswordForm.getToken();
   }
@@ -213,9 +213,9 @@ public class AuthController {
       // 使用済トークン削除
       this.verificationTokenRepository.deleteById(tokenId);
 
-      model.addAttribute("successMessage", "設定が完了しました、ログインしてご確認ください");
+      model.addAttribute("successMsg", "設定が完了しました、ログインしてご確認ください");
     } else {
-      model.addAttribute("errorMessage", "ページが無効です");
+      model.addAttribute("errorMsg", "ページが無効です");
     }
 
     return "auth/verify";

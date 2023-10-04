@@ -4,6 +4,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,29 +17,18 @@ import com.example.ledger.form.UserEditForm;
 import com.example.ledger.form.UserEditPasswordForm;
 import com.example.ledger.security.UserDetailsImpl;
 
-// import com.example.ledger.repository.UserRepository;
-// import com.example.ledger.service.UserService;
+import com.example.ledger.service.GeneralUserService;
 
 @Controller
 @RequestMapping("/mypage")
 public class GeneralUserController {
 
-  // private final UserRepository userRepository;
-  // private final UserService userService;
+  private final GeneralUserService generalUserService;
 
-  // public GeneralUserController(
-  //   UserRepository userRepository,
-  //   UserService userService
-  // ) {
-  //   this.userRepository = userRepository;
-  //   this.userService = userService;
-  // }
-  
-  @GetMapping
-  public String index() {
-    return "users/general/index";
+  public GeneralUserController(GeneralUserService generalUserService) {
+    this.generalUserService = generalUserService;
   }
-
+  
   @GetMapping("/edit")
   public String edit(
     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
@@ -65,7 +55,28 @@ public class GeneralUserController {
     Model model
   ) {
 
-    return "redirect:/mypage";
+    User user = userDetailsImpl.getUser();
+    String newName = userEditForm.getName();
+    String newEmail = userEditForm.getEmail();
+
+    if(this.generalUserService.existsName(user.getName(), newName)) {
+      FieldError fieldError = new FieldError(bindingResult.getObjectName(), "name", "そのユーザー名は既に使用されています");
+      bindingResult.addError(fieldError);
+    }
+    if(this.generalUserService.existsEmail(user.getEmail(), newEmail)) {
+      FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "そのEメールアドレスは既に使用されています");
+      bindingResult.addError(fieldError);
+    }
+    if(bindingResult.hasErrors()) {
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
+
+      return "users/general/edit";
+    }
+
+    this.generalUserService.update(userEditForm, user.getId());
+    redirectAttributes.addFlashAttribute("warningMsg", "ユーザー情報が変更されました、再度ログイン後に反映されます");
+
+    return "redirect:/";
   }
 
   @GetMapping("/editPassword")
@@ -84,6 +95,28 @@ public class GeneralUserController {
     Model model
   ) {
 
-    return "redirect:/mypage";
+    User user = userDetailsImpl.getUser();
+    String currentPassword = userEditPasswordForm.getCurrentPassword();
+    String newPassword = userEditPasswordForm.getNewPassword();
+    String passwordConfirmation = userEditPasswordForm.getPasswordConfirmation();
+
+    if(!this.generalUserService.verifyPassword(currentPassword, user.getId())) {
+      FieldError fieldError = new FieldError(bindingResult.getObjectName(), "currentPassword", "現在のパスワードが一致しません");
+      bindingResult.addError(fieldError);
+    }
+    if(!this.generalUserService.samePasswordConfirmation(newPassword, passwordConfirmation)) {
+      FieldError fieldError = new FieldError(bindingResult.getObjectName(), "newPassword", "確認用パスワードと一致しません");
+      bindingResult.addError(fieldError);
+    }
+    if(bindingResult.hasErrors()) {
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
+
+      return "users/general/editPassword";
+    }
+
+    this.generalUserService.updatePassword(userEditPasswordForm, user.getId());
+    redirectAttributes.addFlashAttribute("successMsg", "パスワードが変更されました");
+
+    return "redirect:/";
   }
 }

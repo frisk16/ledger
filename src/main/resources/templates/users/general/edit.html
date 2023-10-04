@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <div th:replace="~{fragment :: meta}"></div>
+  <div th:replace="~{fragment :: styles}"></div>
+  <title>会員情報変更</title>
+</head>
+<body>
+  <div th:replace="~{fragment :: header}"></div>
+
+  <main class="py-5">
+    <div class="container mt-3">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          <h5 class="text-center my-4">会員情報変更</h5>
+
+          <div class="alert alert-primary text-center" th:if="${param.continue}">
+            ログインしました
+          </div>        
+          <div th:if="${errorMsg}" class="alert alert-danger text-center">
+            <span th:text="${errorMsg}"></span>
+          </div>
+
+          <form th:action="@{/mypage/update}" method="post" th:object="${userEditForm}">
+            <div class="form-group row mb-3">
+              <div class="col-lg-4">
+                <label for="name" class="col-form-label">
+                  ユーザー名
+                </label>
+              </div>
+              <div class="col-lg-8">
+                <div th:if="${#fields.hasErrors('name')}" class="text-danger small" th:errors="*{name}"></div>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="2文字以上10文字以内">
+              </div>
+            </div>
+            <div class="form-group row mb-3">
+              <div class="col-lg-4">
+                <label for="email" class="col-form-label">
+                  Eメールアドレス
+                </label>
+              </div>
+              <div class="col-lg-8">
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small"></div>
+                <input type="email" th:field="*{email}" class="form-control" placeholder="xxxx@yyyy.zzz">
+              </div>
+            </div>
+            <div class="form-group row mb-3">
+              <div class="col-lg-4">
+                <label for="address" class="col-form-label">
+                  住所
+                </label>
+              </div>
+              <div class="col-lg-8">
+                <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-danger small"></div>
+                <input type="text" th:field="*{address}" class="form-control" placeholder="xxxx県 yyy市 zz区 ○○ - ○○ - ○○">
+              </div>
+            </div>
+            <div class="form-group row mb-5">
+              <div class="col-lg-4">
+                <label for="phoneNumber" class="col-form-label">
+                  電話番号
+                </label>
+              </div>
+              <div class="col-lg-8">
+                <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-danger small"></div>
+                <input type="text" th:field="*{phoneNumber}" class="form-control" placeholder="半角ハイフン付き" pattern="\d{2,4}-\d{2,4}-\d{3,4}">
+              </div>
+            </div>
+            <div class="form-group row justify-content-center mb-3">
+              <div class="col-lg-12">
+                <button type="submit" class="btn btn-primary w-100">変更</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragment :: footer}"></div>
+
+  <div th:replace="~{fragment :: scripts}"></div>
+</body>
+</html>
