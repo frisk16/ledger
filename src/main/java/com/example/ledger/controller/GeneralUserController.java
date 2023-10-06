@@ -28,6 +28,15 @@ public class GeneralUserController {
   public GeneralUserController(GeneralUserService generalUserService) {
     this.generalUserService = generalUserService;
   }
+
+  @GetMapping
+  public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
+    User user = userDetailsImpl.getUser();
+
+    model.addAttribute("user", user);
+
+    return "users/general/index";
+  }
   
   @GetMapping("/edit")
   public String edit(
@@ -76,7 +85,7 @@ public class GeneralUserController {
     this.generalUserService.update(userEditForm, user.getId());
     redirectAttributes.addFlashAttribute("warningMsg", "ユーザー情報が変更されました、再度ログイン後に反映されます");
 
-    return "redirect:/";
+    return "redirect:/mypage";
   }
 
   @GetMapping("/editPassword")
@@ -117,6 +126,6 @@ public class GeneralUserController {
     this.generalUserService.updatePassword(userEditPasswordForm, user.getId());
     redirectAttributes.addFlashAttribute("successMsg", "パスワードが変更されました");
 
-    return "redirect:/";
+    return "redirect:/mypage";
   }
 }

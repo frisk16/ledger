@@ -60,14 +60,13 @@ public class GeneralUserService {
   // 現在のパスワードを検証
   public boolean verifyPassword(String currentPassword, Integer userId) {
     User user = this.userRepository.getReferenceById(userId);
-    String encryptPassword = this.passwordEncoding(currentPassword);
     
-    return user.getPassword() == encryptPassword;
+    return this.passwordEncoder.matches(currentPassword, user.getPassword());
   }
 
   // 確認用パスワードと等しい
   public boolean samePasswordConfirmation(String newPassword, String passwordConfirmation) {
-    return newPassword == passwordConfirmation;
+    return newPassword.equals(passwordConfirmation);
   }
 
   // パスワード暗号化

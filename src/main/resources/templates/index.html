@@ -103,25 +103,14 @@
         <div sec:authorize="isAuthenticated()">
           <h5 class="title">会員設定</h5>
           <div class="row justify-content-center">
-            <a th:href="@{/mypage/edit}" class="col-lg-5 col-10 mb-5 top-link">
+            <a th:href="@{/mypage}" class="col-lg-5 col-10 mb-5 top-link">
               <div class="row align-items-center justify-content-between">
                 <div class="col-3">
-                  <i class="fa-4x fa-solid fa-user-pen"></i>
+                  <i class="fa-4x fa-solid fa-user"></i>
                 </div>
                 <div class="col-md-9 col-8">
-                  <h5 class="border-bottom border-secondary">会員情報変更</h5>
-                  <p>ユーザー名、メールアドレス等</p>
-                </div>
-              </div>
-            </a>
-            <a href="#" class="col-lg-5 col-10 mb-5 top-link">
-              <div class="row align-items-center justify-content-between">
-                <div class="col-3">
-                  <i class="fa-4x fa-solid fa-user-lock"></i>
-                </div>
-                <div class="col-md-9 col-8">
-                  <h5 class="border-bottom border-secondary">パスワード変更</h5>
-                  <p>ログインパスワードの変更</p>
+                  <h5 class="border-bottom border-secondary">マイページ</h5>
+                  <p>ユーザー名、メールアドレス、パスワード変更等</p>
                 </div>
               </div>
             </a>

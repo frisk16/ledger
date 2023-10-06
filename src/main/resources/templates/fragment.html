@@ -39,8 +39,12 @@
       <p class="fw-bold">ユーザー設定</p>
       <hr>
       <ul>
-        <li><a th:href="@{/mypage/edit}">会員情報変更</a></li>
-        <li><a href="#">パスワード変更</a></li>
+        <li>
+          <a th:href="@{/mypage}">
+            <i class="fa-solid fa-user"></i>
+            マイページ
+          </a>
+        </li>
       </ul>
     </div>
   </div>
@@ -76,6 +80,9 @@
               </a>
 
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUserContent">
+                <li>
+                  <a th:href="@{/mypage}" class="dropdown-item">マイページ</a>
+                </li>
                 <li>
                   <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">ログアウト</a>
                 </li>
