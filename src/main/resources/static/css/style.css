@@ -17,6 +17,10 @@ a {
   text-decoration: none;
 }
 
+a.member-lists:hover {
+  opacity: 0.7;
+}
+
 p {
   margin: 0;
 }
@@ -232,8 +236,7 @@ aside a:hover {
 /* phone screen */
 @media screen and (max-width: 767px) {
 
-  p,
-  small {
+  p, small, strong {
     font-size: 0.8rem;
   }
 

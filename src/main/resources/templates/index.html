@@ -3,63 +3,26 @@
 <head>
   <div th:replace="~{fragment :: meta}"></div>
   <div th:replace="~{fragment :: styles}"></div>
-  <title>ホーム</title>
+  <title>帳簿管理サイト｜TOP</title>
 </head>
 <body>
   <div th:replace="~{fragment :: header}"></div>
 
-  <div class="alert alert-primary text-center" th:if="${param.logined}">
-    ログインしました
-  </div>
-  <div class="alert alert-primary text-center" th:if="${param.logouted}">
-    ログアウトしました
-  </div>
+  <div th:replace="~{fragment :: alertMessages}"></div>
+
+  <div th:replace="~{fragment :: openAsideButton}"></div>
+
+  <aside>
+    <div class="d-flex justify-content-between mb-3">
+      <h5>MENU</h5>
+      <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
+    </div>
+    <div class="container">
+      <div th:replace="~{fragment :: aside}"></div>
+    </div>
+  </aside>  
 
   <main class="py-5">
-
-    <div class="alert alert-success" th:if="${successMsg}">
-      <span th:text="${successMsg}"></span>
-    </div>
-    <div class="alert alert-warning text-center" th:if="${successSendMsg}">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <span th:text="${successSendMsg}"></span>
-    </div>
-    <div class="alert alert-warning text-center" th:if="${warningMsg}">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <span th:text="${warningMsg}"></span>
-    </div>
-
-    <div th:replace="~{fragment :: openAsideButton}"></div>
-
-    <aside>
-      <div class="d-flex justify-content-between mb-3">
-        <h5>MENU</h5>
-        <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
-      </div>
-      <div class="container">
-        <div th:replace="~{fragment :: aside}"></div>
-        <div class="mb-5">
-          <p class="fw-bold">各種ページ</p>
-          <hr>
-          <ul>
-            <li>
-              <a th:href="@{/payments}">
-                <i class="fa-solid fa-piggy-bank"></i>
-                家計簿
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa-solid fa-bicycle"></i>
-                部品管理(未作成)
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-    </aside>  
-
     <div class="col-aside">
 
       <!-- Carousel -->
@@ -70,7 +33,7 @@
               <img th:src="@{/img/home.jpg}" class="d-block w-100">
             </div>
             <div class="carousel-caption d-md-block p-0">
-              <h5>帳簿管理サイト</h5>
+              <h5>帳簿管理システム</h5>
               <small>家計簿、部品等管理システム</small>
             </div>
           </div>

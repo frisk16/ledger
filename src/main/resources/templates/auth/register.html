@@ -3,20 +3,18 @@
 <head>
   <div th:replace="~{fragment :: meta}"></div>
   <div th:replace="~{fragment :: styles}"></div>
-  <title>登録</title>
+  <title>帳簿管理サイト｜登録</title>
 </head>
 <body>
   <div th:replace="~{fragment :: header}"></div>
+
+  <div th:replace="~{fragment :: alertMessages}"></div>
 
   <main class="py-5">
     <div class="container mt-3">
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
           <h5 class="text-center my-4">ユーザー登録</h5>
-
-          <div th:if="${errorMessage}" class="alert alert-danger text-center">
-            <span th:text="${errorMessage}"></span>
-          </div>
 
           <form th:action="@{/register}" method="post" th:object="${userRegisterForm}">
             <div class="form-group row mb-3">

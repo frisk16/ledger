@@ -24,6 +24,32 @@
 </head>
 <body>
 
+  <!-- alertMessages -->
+  <div th:fragment="alertMessages" th:remove="tag">
+    <div th:if="${param.logined}" class="alert alert-primary text-center">
+      ログインしました
+    </div>
+    <div th:if="${param.continue}" class="alert alert-primary text-center">
+      ログインしました
+    </div>
+    <div th:if="${param.logouted}" class="alert alert-primary text-center">
+      ログアウトしました
+    </div>
+    <div th:if="${param.error}" class="alert alert-danger text-center">
+      ユーザー名、又はEメールアドレスが正しくありません
+    </div>
+    <div th:if="${successMsg}" class="alert alert-success text-center">
+      <span th:text="${successMsg}"></span>
+    </div>
+    <div th:if="${errorMsg}" class="alert alert-danger text-center">
+      <span th:text="${errorMsg}"></span>
+    </div>
+    <div th:if="${warningMsg}" class="alert alert-warning text-center">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span th:text="${warningMsg}"></span>
+    </div>
+  </div>
+
   <!-- openAsideButton -->
   <div th:fragment="openAsideButton" th:remove="tag">
     <div class="background"></div>
@@ -39,10 +65,34 @@
       <p class="fw-bold">ユーザー設定</p>
       <hr>
       <ul>
-        <li>
+        <li class="mb-2">
           <a th:href="@{/mypage}">
             <i class="fa-solid fa-user"></i>
             マイページ
+          </a>
+        </li>
+        <li sec:authorize="hasRole('ROLE_ADMIN')">
+          <a th:href="@{/admin}">
+            <i class="fa-solid fa-shield-halved"></i>
+            管理ページ
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <p class="fw-bold">各種ページ</p>
+      <hr>
+      <ul>
+        <li class="mb-2">
+          <a th:href="@{/payments}">
+            <i class="fa-solid fa-piggy-bank"></i>
+            家計簿
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-bicycle"></i>
+            部品管理(未作成)
           </a>
         </li>
       </ul>

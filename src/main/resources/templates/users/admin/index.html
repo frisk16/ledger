@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <div th:replace="~{fragment :: meta}"></div>
+  <div th:replace="~{fragment :: styles}"></div>
+  <title>帳簿管理サイト｜管理ページ</title>
+</head>
+<body>
+  <div th:replace="~{fragment :: header}"></div>
+
+  <div th:replace="~{fragment :: alertMessages}"></div>
+
+  <div th:replace="~{fragment :: openAsideButton}"></div>
+
+  <aside>
+    <div class="d-flex justify-content-between mb-3">
+      <h5>MENU</h5>
+      <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
+    </div>
+    <div class="container">
+      <div th:replace="~{fragment :: aside}"></div>
+    </div>
+  </aside>
+
+  <main class="py-5">
+    <div class="col-aside">
+      <div class="container mt-5">
+
+        <h5 class="title">管理者メニュー</h5>
+        <div class="row justify-content-center">
+          <a th:href="@{/admin/members}" class="col-lg-5 col-10 mb-5 top-link">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-3">
+                <i class="fa-4x fa-solid fa-user-gear"></i>
+              </div>
+              <div class="col-md-9 col-8">
+                <h5 class="border-bottom border-secondary">ユーザー管理</h5>
+                <p>ユーザー情報の編集等</p>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="col-lg-5 col-10 mb-5 top-link">
+            <div class="row align-items-center justify-content-between">
+              <div class="col-3">
+                <i class="fa-4x fa-solid fa-gears"></i>
+              </div>
+              <div class="col-md-9 col-8">
+                <h5 class="border-bottom border-secondary">部品詳細管理</h5>
+                <p>部品の交換リスト、交換履歴等</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+      </div>
+    </div>
+  </main>
+
+  <div class="col-aside">
+    <div th:replace="~{fragment :: footer}"></div>
+  </div>
+
+  <div th:replace="~{fragment :: scripts}"></div>
+  <script th:src="@{/js/aside.js}"></script>
+</body>
+</html>

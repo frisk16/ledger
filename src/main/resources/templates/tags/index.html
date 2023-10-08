@@ -3,20 +3,12 @@
 <head>
   <div th:replace="~{fragment :: meta}"></div>
   <div th:replace="~{fragment :: styles}"></div>
-  <title>カテゴリー設定</title>
+  <title>帳簿管理サイト｜カテゴリー設定</title>
 </head>
 <body>
   <div th:replace="~{fragment :: header}"></div>
 
-  <div th:if="${param.continue}" class="alert alert-primary text-center">
-    ログインしました
-  </div>
-  <div th:if="${errorMsg}" class="alert alert-danger text-center">
-    <span th:text="${errorMsg}"></span>
-  </div>
-  <div th:if="${successMsg}" class="alert alert-success text-center">
-    <span th:text="${successMsg}"></span>
-  </div>
+  <div th:replace="~{fragment :: alertMessages}"></div>
 
   <div th:replace="~{fragment :: openAsideButton}"></div>
 
@@ -28,12 +20,6 @@
     <div class="container mt-3">
       <div class="mb-5">
         <ul>
-          <li>
-            <a th:href="@{/payments}">
-              <i class="fa-solid fa-piggy-bank"></i>
-              家計簿TOP
-            </a>
-          </li>
           <li>
             <a th:href="@{/categories}">
               <i class="fa-solid fa-gear"></i>

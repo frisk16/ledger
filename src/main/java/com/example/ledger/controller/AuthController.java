@@ -90,14 +90,14 @@ public class AuthController {
     }
 
     if(bindingResult.hasErrors()) {
-      model.addAttribute("errorMessage", "入力内容に誤りがあります");
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
       return "auth/register";
     }
 
     User createdUser = this.userService.create(userRegisterForm);
     String requestUrl = new String(httpServletRequest.getRequestURL());
     this.signupEventPublisher.publishSignupEvent(createdUser, requestUrl);
-    redirectAttributes.addFlashAttribute("successSendMsg", "ご入力頂いたEメールアドレス宛に認証メールを送信しました。メールに記載されているリンクへアクセスし、登録を完了させてください。");
+    redirectAttributes.addFlashAttribute("warningMsg", "ご入力頂いたEメールアドレス宛に認証メールを送信しました。メールに記載されているリンクへアクセスし、登録を完了させてください。");
   
     return "redirect:/";
   }
@@ -129,14 +129,14 @@ public class AuthController {
     }
 
     if(bindingResult.hasErrors()) {
-      model.addAttribute("errorMessage", "入力内容に誤りがあります");
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
       return "auth/sendResetPasswordMail";
     }
 
     User user = this.userRepository.findByEmail(email);
     String requestUrl = new String(httpServletRequest.getRequestURL());
     this.signupEventPublisher.publishSignupEvent(user, requestUrl);
-    redirectAttributes.addFlashAttribute("successSendMsg", "入力頂いたEメールアドレス宛にパスワード再設定メールを送信しました、ご確認ください");
+    redirectAttributes.addFlashAttribute("warningMsg", "入力頂いたEメールアドレス宛にパスワード再設定メールを送信しました、ご確認ください");
 
     return "redirect:/";
   }
@@ -160,7 +160,7 @@ public class AuthController {
 
       return "auth/resetPassword";
     } else {
-      model.addAttribute("errorMessage", "ページが無効です");
+      model.addAttribute("errorMsg", "ページが無効です");
 
       return "auth/verify";
     }
@@ -175,11 +175,11 @@ public class AuthController {
 
     Integer passwordLength = (int) resetPasswordForm.getPassword().length();
     if(passwordLength < 8) {
-      redirectAttributes.addFlashAttribute("errorMessage", "最低8文字以上で設定してください");
+      redirectAttributes.addFlashAttribute("errorMsg", "最低8文字以上で設定してください");
     }
 
     if(!this.userService.isSamePassword(resetPasswordForm.getPassword(), resetPasswordForm.getPasswordConfirmation())) {
-      redirectAttributes.addFlashAttribute("errorMessage", "確認用パスワードが一致しません");
+      redirectAttributes.addFlashAttribute("errorMsg", "確認用パスワードが一致しません");
     }
 
     if(bindingResult.hasErrors()) {

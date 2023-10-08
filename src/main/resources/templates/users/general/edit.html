@@ -3,23 +3,18 @@
 <head>
   <div th:replace="~{fragment :: meta}"></div>
   <div th:replace="~{fragment :: styles}"></div>
-  <title>会員情報変更</title>
+  <title>帳簿管理サイト｜登録情報変更</title>
 </head>
 <body>
   <div th:replace="~{fragment :: header}"></div>
+
+  <div th:replace="~{fragment :: alertMessages}"></div>
 
   <main class="py-5">
     <div class="container mt-3">
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
           <h5 class="text-center my-4">会員情報変更</h5>
-
-          <div class="alert alert-primary text-center" th:if="${param.continue}">
-            ログインしました
-          </div>        
-          <div th:if="${errorMsg}" class="alert alert-danger text-center">
-            <span th:text="${errorMsg}"></span>
-          </div>
 
           <form th:action="@{/mypage/update}" method="post" th:object="${userEditForm}">
             <div class="form-group row mb-3">

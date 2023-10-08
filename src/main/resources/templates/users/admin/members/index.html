@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <div th:replace="~{fragment :: meta}"></div>
+  <div th:replace="~{fragment :: styles}"></div>
+  <title>帳簿管理サイト｜会員リスト</title>
+</head>
+<body>
+  <div th:replace="~{fragment :: header}"></div>
+
+  <div th:replace="~{fragment :: alertMessages}"></div>
+
+  <div th:replace="~{fragment :: openAsideButton}"></div>
+
+  <aside>
+    <div class="d-flex justify-content-between mb-3">
+      <h5>MENU</h5>
+      <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
+    </div>
+    <div class="container">
+      <div th:replace="~{fragment :: aside}"></div>
+    </div>
+  </aside> 
+
+  <main class="py-5">
+    <div class="col-aside">
+      <div class="container mt-5">
+
+        <h5 class="title">会員リスト</h5>
+        <div class="row justify-content-center">
+          <div class="col-md-11">
+            <ul>
+              <li th:each="user : ${users}" class="mt-2">
+                <a href="#" class="member-lists text-dark">
+                  <div class="card card-body">
+                    <div class="row border-bottom border-secondary">
+                      <div class="col-3">
+                        <p th:text="${'ID：' + user.getId()}"></p>
+                      </div>
+                      <div class="col-3">
+                        <p th:if="${user.getRole().getName() == 'ROLE_GENERAL'}" class="text-primary">一般</p>
+                        <p th:if="${user.getRole().getName() == 'ROLE_ADMIN'}" class="text-danger">管理者</p>
+                      </div>
+                      <div class="col-6 text-end">
+                        <p th:if="${user.getEnabled() == 1}" class="text-warning">
+                          <i class="fa-solid fa-check"></i>
+                          有効
+                        </p>
+                        <p th:unless="${user.getEnabled() == 1}" class="text-success">
+                          <i class="fa-solid fa-triangle-exclamation"></i>
+                          無効
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-5">
+                        <p>Name：</p>
+                      </div>
+                      <div class="col-7">
+                        <p>Email-address：</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-5 ps-5">
+                        <strong th:text="${user.getName()}"></strong>
+                      </div>
+                      <div class="col-7 ps-5">
+                        <strong th:text="${user.getEmail()}"></strong>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+
+              <!-- ページネーション -->
+              <li class="mt-5">
+                <div th:if="${users.getTotalPages() > 1}" class="d-flex justify-content-center">
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <span th:if="${users.isFirst()}" class="page-link disabled">前</span>
+                        <a th:unless="${users.isFirst()}" th:href="@{/admin/members(page = ${users.getNumber() - 1})}" class="page-link">前</a>
+                      </li>
+                      <li th:each="i : ${#numbers.sequence(0, users.getTotalPages() - 1)}" class="page-item">
+                        <span th:if="${i == users.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
+                        <a th:unless="${i == users.getNumber()}" th:href="@{/admin/members(page = {i})}" class="page-link" th:text="${i + 1}"></a>
+                      </li>
+                      <li class="page-item">
+                        <span th:if="${users.isLast()}" class="page-link disabled">次</span>
+                        <a th:unless="${users.isLast()}" th:href="@{/admin/members(page = ${users.getNumber() + 1})}" class="page-link">次</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </main>
+
+  <div class="col-aside">
+    <div th:replace="~{fragment :: footer}"></div>
+  </div>
+
+  <div th:replace="~{fragment :: scripts}"></div>
+  <script th:src="@{/js/aside.js}"></script>
+</body>
+</html>
