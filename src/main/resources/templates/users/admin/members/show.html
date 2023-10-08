@@ -68,11 +68,11 @@
             <div class="card card-body">
               <div class="d-flex">
                 <p>Status：　</p>
-                <p th:if="${user.getEnabled() == 1}" class="fw-bold text-success">
+                <p th:if="${user.getEnabled() == true}" class="fw-bold text-success">
                   <i class="fa-solid fa-check"></i>
                   有効
                 </p>
-                <p th:unless="${user.getEnabled() == 1}" class="fw-bold text-warning">
+                <p th:unless="${user.getEnabled() == true}" class="fw-bold text-danger">
                   <i class="fa-solid fa-triangle-exclamation"></i>
                   無効
                 </p>

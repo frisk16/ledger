@@ -31,7 +31,7 @@
           <div class="col-md-11">
             <ul>
               <li th:each="user : ${users}" class="mt-2">
-                <a href="#" class="member-lists text-dark">
+                <a th:href="@{/admin/members/__${user.getId()}__}" class="member-lists text-dark">
                   <div class="card card-body">
                     <div class="row border-bottom border-secondary">
                       <div class="col-3">
@@ -42,11 +42,11 @@
                         <p th:if="${user.getRole().getName() == 'ROLE_ADMIN'}" class="text-danger">管理者</p>
                       </div>
                       <div class="col-6 text-end">
-                        <p th:if="${user.getEnabled() == 1}" class="text-warning">
+                        <p th:if="${user.getEnabled() == true}" class="text-success">
                           <i class="fa-solid fa-check"></i>
                           有効
                         </p>
-                        <p th:unless="${user.getEnabled() == 1}" class="text-success">
+                        <p th:unless="${user.getEnabled() == true}" class="text-danger">
                           <i class="fa-solid fa-triangle-exclamation"></i>
                           無効
                         </p>
