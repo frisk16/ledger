@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ledger.entity.User;
@@ -44,11 +45,33 @@ public class AdminUserController {
 
   @GetMapping("/members")
   public String membersIndex(
+    @RequestParam(name = "sort", required = false) String sort,
+    @RequestParam(name = "keyword", required = false) String keyword,
     @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
     Model model
   ) {
-    Page<User> users = this.userRepository.findAll(pageable);
 
+    Page<User> users;
+    if(keyword != null && sort != null) {
+      if(sort.equals("ASC")) {
+        users = this.userRepository.findByNameLikeOrEmailLikeOrderByCreatedAtAsc("%" + keyword + "%", "%" + keyword + "%", pageable);
+      } else {
+        users = this.userRepository.findByNameLikeOrEmailLike("%" + keyword + "%", "%" + keyword + "%", pageable);
+      }
+    } else if(sort != null) {
+      if(sort.equals("ASC")) {
+        users = this.userRepository.findAllByOrderByCreatedAtAsc(pageable);
+      } else {
+        users = this.userRepository.findAll(pageable);
+      }
+    } else if(keyword != null) {
+      users = this.userRepository.findByNameLikeOrEmailLike("%" + keyword + "%", "%" + keyword + "%", pageable);
+    } else {
+      users = this.userRepository.findAll(pageable);
+    }
+
+    model.addAttribute("keyword", keyword);
+    model.addAttribute("sort", sort);
     model.addAttribute("users", users);
 
     return "users/admin/members/index";

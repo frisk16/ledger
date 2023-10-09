@@ -53,8 +53,8 @@
                   <label for="name" class="col-form-label">タグ追加：</label>
                 </div>
                 <div class="form-group col-md-9 text-form">
-                  <input type="text" th:field="*{name}" class="form-control" placeholder="10文字以内">
-                  <button type="submit" class="btn btn-primary">追加</button>
+                  <input type="text" th:field="*{name}" class="form-control form-control-sm" placeholder="10文字以内">
+                  <button type="submit" class="btn btn-sm btn-primary">追加</button>
                 </div>
                 <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></div>
               </div>

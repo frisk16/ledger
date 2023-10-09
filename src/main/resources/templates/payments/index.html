@@ -19,7 +19,7 @@
     </div>
     <div class="container mt-3">
       <ul>
-        <li>
+        <li class="mb-2">
           <a th:href="@{/categories}">
             <i class="fa-solid fa-gear"></i>
             カテゴリー設定
@@ -88,12 +88,12 @@
 
           <!-- 検索フォーム -->
           <form th:action="@{/payments/search}" method="get" class="text-form mb-3">
-            <select name="when" class="form-select">
+            <select name="when" class="form-select form-select-sm">
               <option value="thisYear">今年</option>
               <option value="lastYear">去年</option>
             </select>
-            <input type="text" name="keyword" class="form-control" required placeholder="支払いタイトルで検索">
-            <button type="submit" class="btn btn-primary">
+            <input type="text" name="keyword" class="form-control form-control-sm" required placeholder="支払いタイトルで検索">
+            <button type="submit" class="btn btn-sm btn-primary">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
           </form>

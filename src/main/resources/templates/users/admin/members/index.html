@@ -29,6 +29,24 @@
         <h5 class="title">会員リスト</h5>
         <div class="row justify-content-center">
           <div class="col-md-11">
+
+            <!-- 検索フォーム -->
+            <div class="row justify-content-between mb-4">
+              <form th:action="@{/admin/members}" method="get" class="col-md-7 mb-2 text-form">
+                <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-sm" placeholder="ユーザー名、又はEmail-addressで検索">
+                <button type="submit" class="btn btn-sm btn-primary">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </form>
+              <form th:action="@{/admin/members}" method="get" class="col-md-2 col-4">
+                <input th:if="${keyword}" type="hidden" name="keyword" th:value="${keyword}">
+                <select name="sort" class="form-select form-select-sm" onChange="this.form.submit();">
+                  <option th:selected="${sort == 'DESC' || sort == null}" value="DESC">新しい順</option>
+                  <option th:selected="${sort == 'ASC'}" value="ASC">古い順</option>
+                </select>
+              </form>
+            </div>
+
             <ul>
               <li th:each="user : ${users}" class="mt-2">
                 <a th:href="@{/admin/members/__${user.getId()}__}" class="member-lists text-dark">
@@ -79,15 +97,15 @@
                     <ul class="pagination">
                       <li class="page-item">
                         <span th:if="${users.isFirst()}" class="page-link disabled">前</span>
-                        <a th:unless="${users.isFirst()}" th:href="@{/admin/members(page = ${users.getNumber() - 1})}" class="page-link">前</a>
+                        <a th:unless="${users.isFirst()}" th:href="@{/admin/members(page = ${users.getNumber() - 1}, keyword = ${keyword}, sort = ${sort})}" class="page-link">前</a>
                       </li>
                       <li th:each="i : ${#numbers.sequence(0, users.getTotalPages() - 1)}" class="page-item">
                         <span th:if="${i == users.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
-                        <a th:unless="${i == users.getNumber()}" th:href="@{/admin/members(page = {i})}" class="page-link" th:text="${i + 1}"></a>
+                        <a th:unless="${i == users.getNumber()}" th:href="@{/admin/members(page = {i}, keyword = ${keyword}, sort = ${sort})}" class="page-link" th:text="${i + 1}"></a>
                       </li>
                       <li class="page-item">
                         <span th:if="${users.isLast()}" class="page-link disabled">次</span>
-                        <a th:unless="${users.isLast()}" th:href="@{/admin/members(page = ${users.getNumber() + 1})}" class="page-link">次</a>
+                        <a th:unless="${users.isLast()}" th:href="@{/admin/members(page = ${users.getNumber() + 1}, keyword = ${keyword}, sort = ${sort})}" class="page-link">次</a>
                       </li>
                     </ul>
                   </nav>
