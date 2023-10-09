@@ -84,7 +84,7 @@ public class AuthController {
       bindingResult.addError(fieldError);
     }
 
-    if(!this.userService.isSamePassword(userRegisterForm.getPassword(), userRegisterForm.getPasswordConfirmation())) {
+    if(!this.userService.samePasswordConfirmation(userRegisterForm.getPassword(), userRegisterForm.getPasswordConfirmation())) {
       FieldError fieldError = new FieldError(bindingResult.getObjectName(), "password", "確認用パスワードが一致しません");
       bindingResult.addError(fieldError);
     }
@@ -178,7 +178,7 @@ public class AuthController {
       redirectAttributes.addFlashAttribute("errorMsg", "最低8文字以上で設定してください");
     }
 
-    if(!this.userService.isSamePassword(resetPasswordForm.getPassword(), resetPasswordForm.getPasswordConfirmation())) {
+    if(!this.userService.samePasswordConfirmation(resetPasswordForm.getPassword(), resetPasswordForm.getPasswordConfirmation())) {
       redirectAttributes.addFlashAttribute("errorMsg", "確認用パスワードが一致しません");
     }
 

@@ -17,16 +17,16 @@ import com.example.ledger.form.UserEditForm;
 import com.example.ledger.form.UserEditPasswordForm;
 import com.example.ledger.security.UserDetailsImpl;
 
-import com.example.ledger.service.GeneralUserService;
+import com.example.ledger.service.UserService;
 
 @Controller
 @RequestMapping("/mypage")
 public class GeneralUserController {
 
-  private final GeneralUserService generalUserService;
+  private final UserService userService;
 
-  public GeneralUserController(GeneralUserService generalUserService) {
-    this.generalUserService = generalUserService;
+  public GeneralUserController(UserService userService) {
+    this.userService = userService;
   }
 
   @GetMapping
@@ -68,11 +68,11 @@ public class GeneralUserController {
     String newName = userEditForm.getName();
     String newEmail = userEditForm.getEmail();
 
-    if(this.generalUserService.existsName(user.getName(), newName)) {
+    if(this.userService.existsName(user.getName(), newName)) {
       FieldError fieldError = new FieldError(bindingResult.getObjectName(), "name", "そのユーザー名は既に使用されています");
       bindingResult.addError(fieldError);
     }
-    if(this.generalUserService.existsEmail(user.getEmail(), newEmail)) {
+    if(this.userService.existsEmail(user.getEmail(), newEmail)) {
       FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "そのEメールアドレスは既に使用されています");
       bindingResult.addError(fieldError);
     }
@@ -82,7 +82,7 @@ public class GeneralUserController {
       return "users/general/edit";
     }
 
-    this.generalUserService.update(userEditForm, user.getId());
+    this.userService.update(userEditForm, user);
     redirectAttributes.addFlashAttribute("warningMsg", "ユーザー情報が変更されました、再度ログイン後に反映されます");
 
     return "redirect:/mypage";
@@ -109,11 +109,11 @@ public class GeneralUserController {
     String newPassword = userEditPasswordForm.getNewPassword();
     String passwordConfirmation = userEditPasswordForm.getPasswordConfirmation();
 
-    if(!this.generalUserService.verifyPassword(currentPassword, user.getId())) {
+    if(!this.userService.verifyPassword(currentPassword, user)) {
       FieldError fieldError = new FieldError(bindingResult.getObjectName(), "currentPassword", "現在のパスワードが一致しません");
       bindingResult.addError(fieldError);
     }
-    if(!this.generalUserService.samePasswordConfirmation(newPassword, passwordConfirmation)) {
+    if(!this.userService.samePasswordConfirmation(newPassword, passwordConfirmation)) {
       FieldError fieldError = new FieldError(bindingResult.getObjectName(), "newPassword", "確認用パスワードと一致しません");
       bindingResult.addError(fieldError);
     }
@@ -123,7 +123,7 @@ public class GeneralUserController {
       return "users/general/editPassword";
     }
 
-    this.generalUserService.updatePassword(userEditPasswordForm, user.getId());
+    this.userService.updatePassword(userEditPasswordForm, user.getId());
     redirectAttributes.addFlashAttribute("successMsg", "パスワードが変更されました");
 
     return "redirect:/mypage";

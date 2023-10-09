@@ -222,6 +222,13 @@ aside a:hover {
   border-radius: 0;
 }
 
+.text-form > select + input[type = "password"] {
+  width: calc(100% - 80px);
+  border-radius: 0 8px 8px 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .text-form > button {
   width: 64px;
   border-radius: 0 8px 8px 0;
