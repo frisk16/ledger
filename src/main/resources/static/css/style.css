@@ -36,12 +36,29 @@ ul {
 .alert-danger {
   position: fixed;
   z-index: -1;
+  background: #777;
+  border: none;
   opacity: 0;
-  top: 80px;
+  bottom: 10%;
   left: 15%;
   right: 15%;
   animation-name: alert;
   animation-duration: 2.5s;
+}
+
+.alert-primary {
+  border-bottom: 4px solid #57f;
+  color: #acf;
+}
+
+.alert-success {
+  border-bottom: 4px solid #5f5;
+  color: #afa;
+}
+
+.alert-danger {
+  border-bottom: 4px solid #f75;
+  color: #fca;
 }
 
 .alert-warning {
