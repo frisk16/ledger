@@ -39,7 +39,7 @@ ul {
   background: #777;
   border: none;
   opacity: 0;
-  bottom: 10%;
+  bottom: 50%;
   left: 15%;
   right: 15%;
   animation-name: alert;
