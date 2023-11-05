@@ -41,7 +41,7 @@ public class PartsCategoryService {
 
     if(!imageFile.isEmpty()) {
       imageName = imageFile.getOriginalFilename();
-      Path filePath = Paths.get("classes/static/storage/" + imageName);
+      Path filePath = Paths.get("src/main/resources/static/storage/" + imageName);
       String uploadFilePath = filePath.toString();
       
       // 一旦ローカルストレージへ画像を保存
@@ -67,7 +67,7 @@ public class PartsCategoryService {
     if(!imageFile.isEmpty()) {
       imageName = imageFile.getOriginalFilename();
       
-      Path filePath = Paths.get("classes/static/storage/" + imageName);
+      Path filePath = Paths.get("src/main/resources/static/storage/" + imageName);
       String uploadFilePath = filePath.toString();
 
       // 一旦ローカルストレージへ画像を保存
