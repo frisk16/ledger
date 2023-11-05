@@ -194,11 +194,11 @@ aside a:hover {
   color: var(--aside-link-hover-color);
 }
 
-.carousel .gradation {
+.gradation {
   position: relative;
 }
 
-.carousel .gradation::before {
+.gradation::before {
   content: "";
   position: absolute;
   width: 100%;
@@ -258,6 +258,44 @@ aside a:hover {
   background-color: #ccc;
 }
 
+table {
+  table-layout: fixed;
+  text-align: center;
+}
+
+table tr {
+  border-bottom: 1px solid #555;
+}
+
+table th,
+table td {
+  width: 200px;
+}
+
+table th {
+  height: 64px;
+}
+
+table td {
+  height: 160px;
+}
+
+table td:last-child {
+  width: 64px;
+}
+
+table img {
+  width: 80% !important;
+  height: 80% !important;
+  object-fit: cover;
+}
+
+.category-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
 /* phone screen */
 @media screen and (max-width: 767px) {
 
@@ -265,7 +303,7 @@ aside a:hover {
     font-size: 0.8rem;
   }
 
-  h5 {
+  h5, h6 {
     font-size: 0.9rem !important;
     font-weight: bold;
   }
@@ -290,5 +328,13 @@ aside a:hover {
 
   .carousel img {
     height: 100%;
+  }
+
+  table {
+    font-size: 0.7rem;
+  }
+
+  table td {
+    height: 96px;
   }
 }

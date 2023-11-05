@@ -1,5 +1,8 @@
 package com.example.ledger.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -17,29 +20,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.ledger.entity.Parts;
+import com.example.ledger.entity.PartsCategory;
 import com.example.ledger.entity.User;
 import com.example.ledger.form.AdminMemberEditForm;
+import com.example.ledger.form.PartsCategoryRegisterForm;
+import com.example.ledger.repository.PartsCategoryRepository;
 import com.example.ledger.repository.UserRepository;
+import com.example.ledger.service.PartsCategoryService;
 import com.example.ledger.service.UserService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminUserController {
+  
+  @Value("${aws.s3.image-folder-url}")
+  private String imageUrl;
 
   private final UserRepository userRepository;
   private final UserService userService;
-
+  private final PartsCategoryRepository partsCategoryRepository;
+  private final PartsCategoryService partsCategoryService;
+  
   public AdminUserController(
     UserRepository userRepository,
-    UserService userService
-  ) {
-    this.userRepository = userRepository;
-    this.userService = userService;
-  }
-  
-  @GetMapping
-  public String index() {
+    UserService userService,
+    PartsCategoryRepository partsCategoryRepository,
+    PartsCategoryService partsCategoryService
+    ) {
+      this.userRepository = userRepository;
+      this.userService = userService;
+      this.partsCategoryRepository = partsCategoryRepository;
+      this.partsCategoryService = partsCategoryService;
+    }
 
+    @GetMapping
+    public String index() {
+      
     return "users/admin/index";
   }
 
@@ -141,6 +158,75 @@ public class AdminUserController {
     redirectAttributes.addFlashAttribute("successMsg", "会員情報を更新しました");
 
     return "redirect:/admin/members/{id}";
+  }
+
+  @GetMapping("/parts")
+  public String partsIndex(Model model) {
+
+    List<PartsCategory> partsCategories = this.partsCategoryRepository.findAll();
+    PartsCategoryRegisterForm registerForm = new PartsCategoryRegisterForm(null, null);
+
+    model.addAttribute("partsCategories", partsCategories);
+    model.addAttribute("registerForm", registerForm);
+    model.addAttribute("imageUrl", this.imageUrl);
+
+    return "users/admin/parts/index";
+  }
+
+  @PostMapping("/parts/categoryCreate")
+  public String partsCategoryCreate(
+    @ModelAttribute PartsCategoryRegisterForm registerForm,
+    RedirectAttributes redirectAttributes
+  ) {
+    if(this.partsCategoryService.isOrverLength(registerForm.getName())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "20文字以内で設定してください");
+      return "redirect:/admin/parts";
+    }
+
+    this.partsCategoryService.create(registerForm);
+    redirectAttributes.addFlashAttribute("successMsg", "カテゴリーを追加しました");
+
+    return "redirect:/admin/parts";
+  }
+
+  @GetMapping("/parts/{id}/showCategory")
+  public String showCategory(
+    @PathVariable(name = "id") Integer id,
+    Model model
+  ) {
+    PartsCategory category = this.partsCategoryRepository.getReferenceById(id);
+    List<Parts> parts = category.getParts();
+    PartsCategoryRegisterForm editForm = new PartsCategoryRegisterForm(category.getName(), null);
+
+    model.addAttribute("category", category);
+    model.addAttribute("parts", parts);
+    model.addAttribute("editForm", editForm);
+    model.addAttribute("imageUrl", this.imageUrl);
+
+    return "users/admin/parts/showCategory";
+  }
+
+  @PostMapping("/parts/{id}/updateCategory")
+  public String updateCategory(
+    @PathVariable(name = "id") Integer id,
+    @ModelAttribute PartsCategoryRegisterForm editForm,
+    RedirectAttributes redirectAttributes
+  ) {
+    
+    if(this.partsCategoryService.isOrverLength(editForm.getName())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "20文字以内で設定してください");
+      return "redirect:/admin/parts/{id}/showCategory";
+    }
+    if(this.partsCategoryService.existsName(id, editForm.getName())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "そのカテゴリー名は既に存在します");
+      return "redirect:/admin/parts/{id}/showCategory";
+    }
+
+    this.partsCategoryService.update(editForm, id);
+    redirectAttributes.addFlashAttribute("successMsg", "カテゴリー情報を更新しました");
+
+    return "redirect:/admin/parts/{id}/showCategory";
+
   }
 
 }
