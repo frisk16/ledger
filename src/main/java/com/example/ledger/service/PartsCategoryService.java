@@ -37,7 +37,7 @@ public class PartsCategoryService {
   @Transactional
   public void create(PartsCategoryRegisterForm registerForm) {
     MultipartFile imageFile = registerForm.getImage();
-    String imageName = "";
+    String imageName = null;
 
     if(!imageFile.isEmpty()) {
       imageName = imageFile.getOriginalFilename();
