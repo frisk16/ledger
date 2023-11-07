@@ -229,4 +229,14 @@ public class AdminUserController {
 
   }
 
+  @GetMapping("/parts/{id}/registerParts")
+  public String registerParts(
+    @PathVariable(name = "id") Integer id,
+    Model model
+  ) {
+
+
+    return "users/admin/parts/registerParts";
+  }
+
 }
