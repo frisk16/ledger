@@ -25,9 +25,11 @@ import com.example.ledger.entity.PartsCategory;
 import com.example.ledger.entity.User;
 import com.example.ledger.form.AdminMemberEditForm;
 import com.example.ledger.form.PartsCategoryRegisterForm;
+import com.example.ledger.form.PartsRegisterForm;
 import com.example.ledger.repository.PartsCategoryRepository;
 import com.example.ledger.repository.UserRepository;
 import com.example.ledger.service.PartsCategoryService;
+import com.example.ledger.service.PartsService;
 import com.example.ledger.service.UserService;
 
 @Controller
@@ -41,17 +43,20 @@ public class AdminUserController {
   private final UserService userService;
   private final PartsCategoryRepository partsCategoryRepository;
   private final PartsCategoryService partsCategoryService;
+  private final PartsService partsService;
   
   public AdminUserController(
     UserRepository userRepository,
     UserService userService,
     PartsCategoryRepository partsCategoryRepository,
-    PartsCategoryService partsCategoryService
+    PartsCategoryService partsCategoryService,
+    PartsService partsService
     ) {
       this.userRepository = userRepository;
       this.userService = userService;
       this.partsCategoryRepository = partsCategoryRepository;
       this.partsCategoryService = partsCategoryService;
+      this.partsService = partsService;
     }
 
     @GetMapping
@@ -60,6 +65,9 @@ public class AdminUserController {
     return "users/admin/index";
   }
 
+  // ----------------------------
+  // ------ Members -------------
+  // ----------------------------
   @GetMapping("/members")
   public String membersIndex(
     @RequestParam(name = "sort", required = false) String sort,
@@ -160,6 +168,9 @@ public class AdminUserController {
     return "redirect:/admin/members/{id}";
   }
 
+  // ----------------------------
+  // ------ Parts ---------------
+  // ----------------------------
   @GetMapping("/parts")
   public String partsIndex(Model model) {
 
@@ -234,9 +245,34 @@ public class AdminUserController {
     @PathVariable(name = "id") Integer id,
     Model model
   ) {
+    PartsCategory partsCategory = this.partsCategoryRepository.getReferenceById(id);
+    PartsRegisterForm registerForm = new PartsRegisterForm(null, null, null);
 
+    model.addAttribute("partsCategory", partsCategory);
+    model.addAttribute("registerForm", registerForm);
 
     return "users/admin/parts/registerParts";
+  }
+
+  @PostMapping("/parts/{id}/createParts")
+  public String createParts(
+    @PathVariable(name = "id") Integer id,
+    @ModelAttribute @Validated PartsRegisterForm registerForm,
+    BindingResult bindingResult, RedirectAttributes redirectAttributes,
+    Model model
+  ) {
+    PartsCategory partsCategory = this.partsCategoryRepository.getReferenceById(id);
+    
+    if(bindingResult.hasErrors()) {
+      model.addAttribute("partsCategory", partsCategory);
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
+      return "users/admin/parts/registerParts";
+    }
+
+    this.partsService.create(registerForm, id);
+    redirectAttributes.addFlashAttribute("successMsg", "パーツを追加しました");
+
+    return "redirect:/admin/parts/{id}/showCategory";
   }
 
 }
