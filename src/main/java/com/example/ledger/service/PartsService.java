@@ -88,6 +88,11 @@ public class PartsService {
       
       // AWS S3へアップロード
       this.uploadImageFile(imageName, uploadPath);
+
+      // AWS S3上にある古い画像を削除
+      if(parts.getImage() != null) {
+        this.deleteS3File(parts.getImage());
+      }
     }
 
     LocalDate exchangedDate = LocalDate.parse(partsEditForm.getExchangedDate());
@@ -116,6 +121,16 @@ public class PartsService {
       this.s3Client.putObject(this.bucketName + "/image", imageName, file);
       file.delete();
     } catch (AmazonServiceException e) {
+      e.printStackTrace();
+    }
+  }
+
+  // AWS S3上の画像を削除
+  private void deleteS3File(String imageName) {
+    try {
+      String imagePath = "image/" + imageName;
+      this.s3Client.deleteObject(this.bucketName, imagePath);
+    } catch(AmazonServiceException e) {
       e.printStackTrace();
     }
   }
