@@ -86,13 +86,14 @@ public class PartsService {
       // 一旦ローカル上へコピー
       this.copyImageFile(imageFile, path);
       
-      // AWS S3へアップロード
-      this.uploadImageFile(imageName, uploadPath);
-
       // AWS S3上にある古い画像を削除
       if(parts.getImage() != null) {
         this.deleteS3File(parts.getImage());
       }
+      
+      // AWS S3へアップロード
+      this.uploadImageFile(imageName, uploadPath);
+
     }
 
     LocalDate exchangedDate = LocalDate.parse(partsEditForm.getExchangedDate());
