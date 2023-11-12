@@ -27,6 +27,7 @@ import com.example.ledger.form.AdminMemberEditForm;
 import com.example.ledger.form.PartsCategoryRegisterForm;
 import com.example.ledger.form.PartsRegisterForm;
 import com.example.ledger.repository.PartsCategoryRepository;
+import com.example.ledger.repository.PartsRepository;
 import com.example.ledger.repository.UserRepository;
 import com.example.ledger.service.PartsCategoryService;
 import com.example.ledger.service.PartsService;
@@ -43,6 +44,7 @@ public class AdminUserController {
   private final UserService userService;
   private final PartsCategoryRepository partsCategoryRepository;
   private final PartsCategoryService partsCategoryService;
+  private final PartsRepository partsRepository;
   private final PartsService partsService;
   
   public AdminUserController(
@@ -50,12 +52,14 @@ public class AdminUserController {
     UserService userService,
     PartsCategoryRepository partsCategoryRepository,
     PartsCategoryService partsCategoryService,
+    PartsRepository partsRepository,
     PartsService partsService
     ) {
       this.userRepository = userRepository;
       this.userService = userService;
       this.partsCategoryRepository = partsCategoryRepository;
       this.partsCategoryService = partsCategoryService;
+      this.partsRepository = partsRepository;
       this.partsService = partsService;
     }
 
@@ -64,6 +68,7 @@ public class AdminUserController {
       
     return "users/admin/index";
   }
+
 
   // ----------------------------
   // ------ Members -------------
@@ -102,6 +107,7 @@ public class AdminUserController {
     return "users/admin/members/index";
   }
 
+
   @GetMapping("/members/{id}")
   public String membersShow(
     @PathVariable(name = "id") Integer id,
@@ -113,6 +119,7 @@ public class AdminUserController {
 
     return "users/admin/members/show";
   }
+
 
   @GetMapping("/members/{id}/edit")
   public String membersEdit(
@@ -135,6 +142,7 @@ public class AdminUserController {
 
     return "users/admin/members/edit";
   }
+
 
   @PostMapping("/members/{id}/update")
   public String membersUpdate(
@@ -168,6 +176,7 @@ public class AdminUserController {
     return "redirect:/admin/members/{id}";
   }
 
+
   // ----------------------------
   // ------ Parts ---------------
   // ----------------------------
@@ -183,6 +192,7 @@ public class AdminUserController {
 
     return "users/admin/parts/index";
   }
+
 
   @PostMapping("/parts/categoryCreate")
   public String partsCategoryCreate(
@@ -200,6 +210,7 @@ public class AdminUserController {
     return "redirect:/admin/parts";
   }
 
+
   @GetMapping("/parts/{id}/showCategory")
   public String showCategory(
     @PathVariable(name = "id") Integer id,
@@ -216,6 +227,7 @@ public class AdminUserController {
 
     return "users/admin/parts/showCategory";
   }
+
 
   @PostMapping("/parts/{id}/updateCategory")
   public String updateCategory(
@@ -240,39 +252,93 @@ public class AdminUserController {
 
   }
 
+
   @GetMapping("/parts/{id}/registerParts")
   public String registerParts(
     @PathVariable(name = "id") Integer id,
     Model model
   ) {
     PartsCategory partsCategory = this.partsCategoryRepository.getReferenceById(id);
-    PartsRegisterForm registerForm = new PartsRegisterForm(null, null, null);
+    PartsRegisterForm partsRegisterForm = new PartsRegisterForm(null, null, null, null);
 
     model.addAttribute("partsCategory", partsCategory);
-    model.addAttribute("registerForm", registerForm);
+    model.addAttribute("partsRegisterForm", partsRegisterForm);
 
     return "users/admin/parts/registerParts";
   }
 
+
   @PostMapping("/parts/{id}/createParts")
   public String createParts(
     @PathVariable(name = "id") Integer id,
-    @ModelAttribute @Validated PartsRegisterForm registerForm,
+    @ModelAttribute @Validated PartsRegisterForm partsRegisterForm,
     BindingResult bindingResult, RedirectAttributes redirectAttributes,
     Model model
   ) {
-    PartsCategory partsCategory = this.partsCategoryRepository.getReferenceById(id);
     
     if(bindingResult.hasErrors()) {
+      PartsCategory partsCategory = this.partsCategoryRepository.getReferenceById(id);
       model.addAttribute("partsCategory", partsCategory);
       model.addAttribute("errorMsg", "入力内容に誤りがあります");
       return "users/admin/parts/registerParts";
     }
 
-    this.partsService.create(registerForm, id);
+    this.partsService.create(partsRegisterForm, id);
     redirectAttributes.addFlashAttribute("successMsg", "パーツを追加しました");
 
     return "redirect:/admin/parts/{id}/showCategory";
+  }
+
+
+  @GetMapping("/parts/{categoryId}/{partsId}/edit")
+  public String editParts(
+    @PathVariable(name = "partsId") Integer partsId,
+    Model model
+  ) {
+    
+    Parts parts = this.partsRepository.getReferenceById(partsId);
+    String exchangedDate = parts.getExchangedDate().toString();
+    PartsRegisterForm partsEditForm = new PartsRegisterForm(parts.getName(), null, parts.getDescription(), exchangedDate);
+
+    model.addAttribute("parts", parts);
+    model.addAttribute("partsEditForm", partsEditForm);
+
+    return "users/admin/parts/editParts";
+  }
+
+
+  @PostMapping("/parts/{categoryId}/{partsId}/update")
+  public String updateParts(
+    @PathVariable(name = "partsId") Integer partsId,
+    @ModelAttribute @Validated PartsRegisterForm partsEditForm,
+    BindingResult bindingResult, RedirectAttributes redirectAttributes,
+    Model model
+  ) {
+
+    if(bindingResult.hasErrors()) {
+      Parts parts = this.partsRepository.getReferenceById(partsId);
+      model.addAttribute("parts", parts);
+      model.addAttribute("errorMsg", "入力内容に誤りがあります");
+      return "users/admin/parts/editParts";
+    }
+
+    this.partsService.update(partsEditForm, partsId);
+    redirectAttributes.addFlashAttribute("successMsg", "パーツ情報を更新しました");
+    
+    return "redirect:/admin/parts/{categoryId}/showCategory";
+  }
+
+  
+  @PostMapping("/parts/{categoryId}/{partsId}/delete")
+  public String deleteParts(
+    @PathVariable(name = "partsId") Integer partsId,
+    RedirectAttributes redirectAttributes
+  ) {
+    
+    this.partsRepository.deleteById(partsId);
+    redirectAttributes.addFlashAttribute("successMsg", "パーツを削除しました");
+
+    return "redirect:/admin/parts/{categoryId}/showCategory";
   }
 
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,11 @@ public class PartsService {
   }
 
   @Transactional
-  public void create(PartsRegisterForm registerForm, Integer id) {
+  public void create(PartsRegisterForm partsRegisterForm, Integer id) {
     
-    MultipartFile imageFile = registerForm.getImage();
-    
+    MultipartFile imageFile = partsRegisterForm.getImage();
     String imageName = null;
+    
     if(!imageFile.isEmpty()) {
       imageName = imageFile.getOriginalFilename();
       Path path = Paths.get("src/main/resources/static/img/" + imageName);
@@ -58,15 +59,46 @@ public class PartsService {
     }
 
     PartsCategory category = this.categoryRepository.getReferenceById(id);
+    LocalDate exchangedDate = LocalDate.parse(partsRegisterForm.getExchangedDate());
     Parts parts = new Parts();
 
     parts.setPartsCategory(category);
-    parts.setName(registerForm.getName());
+    parts.setName(partsRegisterForm.getName());
     parts.setImage(imageName);
-    parts.setDescription(registerForm.getDescription());
+    parts.setDescription(partsRegisterForm.getDescription());
+    parts.setExchangedDate(exchangedDate);
 
     this.partsRepository.save(parts);
   }
+
+  @Transactional
+  public void update(PartsRegisterForm partsEditForm, Integer id) {
+
+    Parts parts = this.partsRepository.getReferenceById(id);
+    MultipartFile imageFile = partsEditForm.getImage();
+    String imageName = parts.getImage();
+
+    if(!imageFile.isEmpty()) {
+      imageName = imageFile.getOriginalFilename();
+      Path path = Paths.get("src/main/resources/static/img/" + imageName);
+      String uploadPath = path.toString();
+
+      // 一旦ローカル上へコピー
+      this.copyImageFile(imageFile, path);
+      
+      // AWS S3へアップロード
+      this.uploadImageFile(imageName, uploadPath);
+    }
+
+    LocalDate exchangedDate = LocalDate.parse(partsEditForm.getExchangedDate());
+    parts.setName(partsEditForm.getName());
+    parts.setImage(imageName);
+    parts.setDescription(partsEditForm.getDescription());
+    parts.setExchangedDate(exchangedDate);
+
+    this.partsRepository.save(parts);
+  }
+
 
   // ローカルへ画像を保存
   private void copyImageFile(MultipartFile imageFile, Path path) {

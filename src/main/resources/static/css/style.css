@@ -17,7 +17,7 @@ a {
   text-decoration: none;
 }
 
-a.member-lists:hover {
+li > a:hover {
   opacity: 0.7;
 }
 

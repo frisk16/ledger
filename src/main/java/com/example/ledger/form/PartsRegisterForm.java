@@ -20,4 +20,7 @@ public class PartsRegisterForm {
   @Length(max = 255, message = "255文字以内で設定してください")
   private String description;
 
+  @NotBlank(message = "交換日を設定してください")
+  private String exchangedDate;
+
 }
