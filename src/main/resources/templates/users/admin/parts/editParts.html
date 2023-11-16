@@ -20,6 +20,71 @@
         <div class="col-lg-6 col-md-8">
           <h5 class="text-center my-4" th:text="${'パーツ名｜' + parts.getName()}"></h5>
 
+          <div class="row mt-3">
+            <div class="col-12 text-end mb-3">
+              <a th:if="${parts.getNotices().isEmpty()}" href="#" data-bs-toggle="modal" data-bs-target="#addNoticeModal" class="btn btn-success btn-sm">通知を追加</a>
+              <a th:unless="${parts.getNotices().isEmpty()}" href="#" data-bs-toggle="modal" data-bs-target="#delNoticeModal" class="btn btn-danger btn-sm">通知を削除</a>
+
+              <!-- AddNoticeModal -->
+              <div class="modal fade" id="addNoticeModal" tabindex="-1" data-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <form th:action="@{/admin/parts/__${parts.getPartsCategory().getId()}__/__${parts.getId()}__/addNotice}" method="post" th:object="${addNoticeForm}">
+                      <div class="modal-body">
+                        <div class="row">
+                          <div th:each="notice : ${notices}" class="col-4 text-center">
+                            <label th:for="${notice.getId()}" class="badge bg-success form-check-label" th:text="${notice.getName()}"></label>
+                            <input type="checkbox" class="form-check-input" name="noticeIds[]" th:id="${notice.getId()}" th:value="${notice.getId()}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                        <button type="submit" class="btn btn-primary btn-sm">追加</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DelNoticeModal -->
+              <div class="modal fade" id="delNoticeModal" tabindex="-1" data-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <div class="modal-title">
+                        通知を全て削除します、よろしいですか？
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <form th:action="@{/admin/parts/__${parts.getPartsCategory().getId()}__/__${parts.getId()}__/deleteNotice}" method="post">
+                        <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                        <button type="submit" class="btn btn-danger btn-sm">全て削除</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-lg-4">
+                  通知
+                </div>
+                <div class="col-lg-8">
+                  <div th:if="${parts.getNotices().isEmpty()}" class="text-danger2">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    通知はありません
+                  </div>
+                  <div th:unless="${parts.getNotices().isEmpty()}">
+                    <span th:each="notice : ${parts.getNotices()}" class="badge bg-danger2 me-2" th:text="${notice.getName()}"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
           <form th:action="@{/admin/parts/__${parts.getPartsCategory().getId()}__/__${parts.getId()}__/update}" method="post" th:object="${partsEditForm}" enctype="multipart/form-data">
             <div class="form-group row mt-3">
               <div class="col-lg-4">

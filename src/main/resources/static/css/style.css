@@ -6,6 +6,7 @@
   --pagination-disable-color: #aaa;
   --aside-link-color: #0ff;
   --aside-link-hover-color: #cff;
+  --danger2-color: #f70;
 }
 
 body {
@@ -29,6 +30,14 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.text-danger2 {
+  color: var(--danger2-color);
+}
+
+.bg-danger2 {
+  background-color: var(--danger2-color);
 }
 
 .alert-primary,

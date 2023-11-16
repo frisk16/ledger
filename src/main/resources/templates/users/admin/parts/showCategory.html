@@ -74,8 +74,13 @@
               <li th:each="item : ${parts}" class="mt-3">
                 <a th:href="@{/admin/parts/__${category.getId()}__/__${item.getId()}__/edit}" class="text-dark">
                   <div class="card">
-                    <div class="card-header">
-                      <p>交換日：<span class="fw-bold" th:text="${item.getExchangedDate()}"></span></p>
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <div class="d-flex flex-wrap">
+                        <p>交換日：</p><span class="fw-bold" th:text="${item.getExchangedDate()}"></span>
+                      </div>
+                      <div>
+                        <span th:each="notice : ${item.getNotices()}" class="badge bg-danger2 ms-2" th:text="${notice.getName()}"></span>
+                      </div>
                     </div>
                     <div class="card-body">
                       <div class="row">

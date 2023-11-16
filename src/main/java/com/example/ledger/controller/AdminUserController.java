@@ -20,15 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.ledger.entity.Notice;
 import com.example.ledger.entity.Parts;
 import com.example.ledger.entity.PartsCategory;
 import com.example.ledger.entity.User;
+import com.example.ledger.form.AddNoticeForm;
 import com.example.ledger.form.AdminMemberEditForm;
 import com.example.ledger.form.PartsCategoryRegisterForm;
 import com.example.ledger.form.PartsRegisterForm;
+import com.example.ledger.repository.NoticeRepository;
 import com.example.ledger.repository.PartsCategoryRepository;
 import com.example.ledger.repository.PartsRepository;
 import com.example.ledger.repository.UserRepository;
+import com.example.ledger.service.NoticeService;
 import com.example.ledger.service.PartsCategoryService;
 import com.example.ledger.service.PartsService;
 import com.example.ledger.service.UserService;
@@ -46,6 +50,8 @@ public class AdminUserController {
   private final PartsCategoryService partsCategoryService;
   private final PartsRepository partsRepository;
   private final PartsService partsService;
+  private final NoticeService noticeService;
+  private final NoticeRepository noticeRepository;
   
   public AdminUserController(
     UserRepository userRepository,
@@ -53,7 +59,9 @@ public class AdminUserController {
     PartsCategoryRepository partsCategoryRepository,
     PartsCategoryService partsCategoryService,
     PartsRepository partsRepository,
-    PartsService partsService
+    PartsService partsService,
+    NoticeService noticeService,
+    NoticeRepository noticeRepository
     ) {
       this.userRepository = userRepository;
       this.userService = userService;
@@ -61,6 +69,8 @@ public class AdminUserController {
       this.partsCategoryService = partsCategoryService;
       this.partsRepository = partsRepository;
       this.partsService = partsService;
+      this.noticeService = noticeService;
+      this.noticeRepository = noticeRepository;
     }
 
     @GetMapping
@@ -299,9 +309,13 @@ public class AdminUserController {
     Parts parts = this.partsRepository.getReferenceById(partsId);
     String exchangedDate = parts.getExchangedDate().toString();
     PartsRegisterForm partsEditForm = new PartsRegisterForm(parts.getName(), null, parts.getDescription(), exchangedDate);
+    AddNoticeForm addNoticeForm = new AddNoticeForm();
+    List<Notice> notices = this.noticeRepository.findAll();
 
     model.addAttribute("parts", parts);
     model.addAttribute("partsEditForm", partsEditForm);
+    model.addAttribute("addNoticeForm", addNoticeForm);
+    model.addAttribute("notices", notices);
 
     return "users/admin/parts/editParts";
   }
@@ -340,5 +354,38 @@ public class AdminUserController {
 
     return "redirect:/admin/parts/{categoryId}/showCategory";
   }
+
+  @PostMapping("/parts/{categoryId}/{partsId}/addNotice")
+  public String addNotice(
+    @PathVariable(name = "partsId") Integer partsId,
+    @ModelAttribute @Validated AddNoticeForm addNoticeForm,
+    BindingResult bindingResult, RedirectAttributes redirectAttributes,
+    Model model
+  ) {
+
+    if(bindingResult.hasErrors()) {
+      redirectAttributes.addFlashAttribute("errorMsg", "通知を選択してください");
+      return "redirect:/admin/parts/{categoryId}/{partsId}/edit";
+    }
+
+    this.noticeService.add(addNoticeForm, partsId);
+    redirectAttributes.addFlashAttribute("successMsg", "通知を追加しました");
+
+    return "redirect:/admin/parts/{categoryId}/{partsId}/edit";
+  }
+
+
+  @PostMapping("/parts/{categoryId}/{partsId}/deleteNotice")
+  public String deleteNotice(
+    @PathVariable(name = "partsId") Integer partsId,
+    RedirectAttributes redirectAttributes
+  ) {
+
+    this.noticeService.delete(partsId);
+    redirectAttributes.addFlashAttribute("successMsg", "通知を削除しました");
+
+    return "redirect:/admin/parts/{categoryId}/{partsId}/edit";
+  }
+
 
 }
