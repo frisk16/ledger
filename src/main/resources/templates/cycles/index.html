@@ -41,10 +41,30 @@
               <div class="my-2">
                 <h5 th:text="${category.getName()}"></h5>
                 <hr>
-                <p>現在装着中のパーツ</p>
-                <p class="fw-bold">item item item item</p>
+
+                <div class="card card-body">
+                  <div th:if="${category.getParts().isEmpty()}">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    無し
+                  </div>
+                  <div th:unless="${category.getParts().isEmpty()}">
+                    <div th:each="parts : ${category.getParts()}">
+
+                      <div th:each="notice : ${parts.getNotices()}">
+                        <p th:if="${notice.getId() == 5}" class="d-flex flex-wrap mb-1">
+                          <span class="badge bg-success">装着中</span>
+                          <span th:text="${parts.getName()}"></span>
+                        </p>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
                 <hr>
-                <p th:text="${'総交換回数：' + category.getParts().size()}"></p>
+
+                <p th:text="${'総交換回数：' + category.getParts().size() + '回'}"></p>
+
               </div>
             </div>
           </div>
