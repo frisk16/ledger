@@ -15,95 +15,105 @@
     <div class="container mt-3">
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
-          <h5 class="text-center my-4" th:text="${'会員ID：' + user.getId() + '｜Name：' + user.getName()}"></h5>
 
-          <form th:action="@{/admin/members/__${user.getId()}__/update}" method="post" name="editForm" th:object="${adminMemberEditForm}">
-            <div class="form-group row mb-3">
-              <div class="col-lg-4">
-                <label for="name" class="col-form-label">
-                  名前
-                </label>
-              </div>
-              <div class="col-lg-8">
-                <div th:if="${#fields.hasErrors('name')}" class="text-danger small" th:errors="*{name}"></div>
-                <input type="text" th:field="*{name}" class="form-control" placeholder="2文字以上,10文字以内">
-              </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-lg-4">
-                <label for="email" class="col-form-label">
-                  Eメールアドレス
-                </label>
-              </div>
-              <div class="col-lg-8">
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small"></div>
-                <input type="email" th:field="*{email}" class="form-control" placeholder="xxx@yyyy.zzz">
-              </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-lg-4">
-                <label for="address" class="col-form-label">
-                  住所
-                </label>
-              </div>
-              <div class="col-lg-8">
-                <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-danger small"></div>
-                <input type="text" th:field="*{address}" class="form-control" placeholder="〇〇○県 ✕✕✕市">
-              </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-lg-4">
-                <label for="phoneNumber" class="col-form-label">
-                  電話番号
-                </label>
-              </div>
-              <div class="col-lg-8">
-                <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-danger small"></div>
-                <input type="text" th:field="*{phoneNumber}" class="form-control" placeholder="半角ハイフン付き">
-              </div>
-            </div>
-            <div class="form-group row mb-3">
-              <div class="col-lg-4">
-                <label class="col-form-label">
-                  パスワード
-                </label>
-              </div>
-              <div class="col-lg-8">
-                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small"></div>
-                <div class="text-form">
-                  <select id="display" class="form-select">
-                    <option value="disable" selected>無効</option>
-                    <option value="enable">解除</option>
-                  </select>
-                  <input type="password" tabindex="-1" name="password" id="password" th:value="${user.getPassword()}" class="form-control d-inline-block" placeholder="8文字以上">
+          <h5 class="text-center my-4" th:text="${'会員ID：' + user.getId() + '｜Name：' + user.getName()}"></h5>
+          
+          <div class="mb-3">
+            <a th:href="@{/admin}">管理者Top</a> >>
+            <a th:href="@{/admin/members}">会員リスト</a> >>
+            <a th:href="@{/admin/members/__${user.getId()}__}">会員照会</a> >>
+            <span>会員情報変更</span>
+          </div>
+
+          <div class="card card-body shadow">
+            <form th:action="@{/admin/members/__${user.getId()}__/update}" method="post" name="editForm" th:object="${adminMemberEditForm}">
+              <div class="form-group row mb-3">
+                <div class="col-lg-4">
+                  <label for="name" class="col-form-label">
+                    名前
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <div th:if="${#fields.hasErrors('name')}" class="text-danger small" th:errors="*{name}"></div>
+                  <input type="text" th:field="*{name}" class="form-control" placeholder="2文字以上,10文字以内">
                 </div>
               </div>
-            </div>
-            <div class="form-group row mb-5">
-              <div class="col-lg-4">
-                <label for="enabled" class="col-form-label">
-                  Status
-                </label>
+              <div class="form-group row mb-3">
+                <div class="col-lg-4">
+                  <label for="email" class="col-form-label">
+                    Eメールアドレス
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small"></div>
+                  <input type="email" th:field="*{email}" class="form-control" placeholder="xxx@yyyy.zzz">
+                </div>
               </div>
-              <div class="col-lg-8">
-                <label for="enable" class="col-form-label me-3">
-                  有効
-                  <input th:if="${user.getEnabled() == true}" type="radio" name="enabled" id="enable" value="true" checked>
-                  <input th:unless="${user.getEnabled() == true}" type="radio" name="enabled" value="true" id="enable">
-                </label>
-                <label for="disable" class="col-form-label">
-                  無効
-                  <input th:if="${user.getEnabled() == true}" type="radio" name="enabled" id="disable" value="false">
-                  <input th:unless="${user.getEnabled() == true}" type="radio" name="enabled" id="disable" value="false" checked>
-                </label>
+              <div class="form-group row mb-3">
+                <div class="col-lg-4">
+                  <label for="address" class="col-form-label">
+                    住所
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-danger small"></div>
+                  <input type="text" th:field="*{address}" class="form-control" placeholder="〇〇○県 ✕✕✕市">
+                </div>
               </div>
-            </div>
-            <div class="form-group row justify-content-center mb-3">
-              <div class="col-lg-12">
-                <button type="submit" class="btn btn-primary w-100">更新</button>
+              <div class="form-group row mb-3">
+                <div class="col-lg-4">
+                  <label for="phoneNumber" class="col-form-label">
+                    電話番号
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-danger small"></div>
+                  <input type="text" th:field="*{phoneNumber}" class="form-control" placeholder="半角ハイフン付き">
+                </div>
               </div>
-            </div>
-          </form>
+              <div class="form-group row mb-3">
+                <div class="col-lg-4">
+                  <label class="col-form-label">
+                    パスワード
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small"></div>
+                  <div class="text-form">
+                    <select id="display" class="form-select">
+                      <option value="disable" selected>固定</option>
+                      <option value="enable">変更</option>
+                    </select>
+                    <input type="password" tabindex="-1" name="password" id="password" th:value="${user.getPassword()}" class="form-control d-inline-block" placeholder="8文字以上">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row mb-5">
+                <div class="col-lg-4">
+                  <label for="enabled" class="col-form-label">
+                    Status
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <label for="enable" class="col-form-label me-3">
+                    有効
+                    <input th:if="${user.getEnabled() == true}" type="radio" name="enabled" id="enable" value="true" checked>
+                    <input th:unless="${user.getEnabled() == true}" type="radio" name="enabled" value="true" id="enable">
+                  </label>
+                  <label for="disable" class="col-form-label">
+                    無効
+                    <input th:if="${user.getEnabled() == true}" type="radio" name="enabled" id="disable" value="false">
+                    <input th:unless="${user.getEnabled() == true}" type="radio" name="enabled" id="disable" value="false" checked>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group row justify-content-center mb-3">
+                <div class="col-lg-12">
+                  <button type="submit" class="btn btn-primary w-100">更新</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -310,7 +310,7 @@ table img {
 /* phone screen */
 @media screen and (max-width: 767px) {
 
-  p, small, strong {
+  p, small, strong, span, a {
     font-size: 0.8rem;
   }
 

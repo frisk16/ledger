@@ -46,14 +46,22 @@
                 <i class="fa-solid fa-gear"></i>
                 カテゴリー設定
               </h5>
+
               <a th:if="${!categories.isEmpty()}" href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
                 <i class="fa-solid fa-folder-plus"></i>
                 追加
               </a>
             </div>
-            <div th:if="${!categories.isEmpty()}" class="mt-5">
+
+            <div class="mt-4">
+              <a th:href="@{/}">Top</a> >>
+              <a th:href="@{/payments}">家計簿Top</a> >>
+              <span>カテゴリー設定</span>
+            </div>    
+
+            <div th:if="${!categories.isEmpty()}" class="mt-3">
               <ul>
-                <li th:each="category : ${categories}">
+                <li th:each="category : ${categories}" class="card card-body shadow mb-2">
                   <div class="container d-flex justify-content-between">
                     <p th:text="${category.getName()}"></p>
                     <p>
@@ -66,7 +74,6 @@
                       </a>
                     </p>
                   </div>
-                  <hr>
   
                   <!-- 編集モーダル -->
                   <div class="modal fade" th:id="${'editCategoryModal' + category.getId()}" tabindex="-1">
@@ -82,8 +89,8 @@
                             <input type="text" class="form-control" name="name" th:value="${category.getName()}" pattern=".*\S+.*" title="スペース禁止">
                           </div>
                           <div class="modal-footer">
-                            <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                            <button type="submit" class="btn btn-success">更新</button>
+                            <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-success btn-sm">更新</button>
                           </div>
                         </form>
                       </div>
@@ -104,8 +111,8 @@
                         </div>
                         <div class="modal-footer">
                           <form th:action="@{/categories/__${category.getId()}__/delete}" method="post">
-                            <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                            <button type="submit" class="btn btn-danger">削除</button>
+                            <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-danger btn-sm">削除</button>
                           </form>
                         </div>
                       </div>
@@ -114,6 +121,7 @@
                 </li>
               </ul>
             </div>
+            
             <div th:unless="${!categories.isEmpty()}" class="mt-5">
               <h5 class="text-center text-secondary">
                 <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
@@ -144,8 +152,8 @@
               <input type="text" class="form-control" th:field="*{name}" placeholder="20文字以内" pattern=".*\S+.*" title="スペース禁止">
             </div>
             <div class="modal-footer">
-              <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-              <button type="submit" class="btn btn-primary">追加</button>
+              <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+              <button type="submit" class="btn btn-primary btn-sm">追加</button>
             </div>
           </form>
         </div>

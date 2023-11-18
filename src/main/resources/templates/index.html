@@ -70,6 +70,7 @@
         <div sec:authorize="isAuthenticated()">
           <h5 class="title">会員設定</h5>
           <div class="row justify-content-center">
+
             <a th:href="@{/mypage}" class="col-lg-5 col-10 mb-5 top-link">
               <div class="row align-items-center justify-content-between">
                 <div class="col-3">
@@ -78,6 +79,18 @@
                 <div class="col-md-9 col-8">
                   <h5 class="border-bottom border-secondary">マイページ</h5>
                   <p>ユーザー名、メールアドレス、パスワード変更等</p>
+                </div>
+              </div>
+            </a>
+
+            <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin}" class="col-lg-5 col-10 mb-5 top-link">
+              <div class="row align-items-center justify-content-between">
+                <div class="col-3">
+                  <i class="fa-4x fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="col-md-9 col-8">
+                  <h5 class="border-bottom border-secondary">管理ページ</h5>
+                  <p>会員照会、部品管理等</p>
                 </div>
               </div>
             </a>

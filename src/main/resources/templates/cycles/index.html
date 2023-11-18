@@ -28,43 +28,51 @@
 
         <h5 class="title">部品一覧ページ</h5>
 
+        <div class="mb-3">
+          <a th:href="@{/}">Top</a> >>
+          <span>部品一覧ページ</span>
+        </div>
+
         <div th:if="${!categories.isEmpty()}" class="row">
-          <div th:each="category : ${categories}" class="col-md-4 col-6 mt-3">
-            <div class="card card-body shadow">
-              <div>
+          <div th:each="category : ${categories}" class="col-md-4 col-6 mb-3">
+            <div class="card shadow">
+              <div class="card-img-top">
                 <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="img-fluid">
-                <div th:unless="${category.getImage()}" class="mt-3 text-center">
+                <div th:unless="${category.getImage()}" class="mt-5 text-center">
                   <i th:unless="${category.getImage()}" class="fa-3x fa-solid fa-file-circle-question text-secondary"></i>
                   <p class="mt-3">【画像なし】</p>
                 </div>
               </div>
-              <div class="my-2">
-                <h5 th:text="${category.getName()}"></h5>
-                <hr>
-
-                <div class="card card-body">
-                  <div th:if="${category.getParts().isEmpty()}">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    無し
-                  </div>
-                  <div th:unless="${category.getParts().isEmpty()}">
-                    <div th:each="parts : ${category.getParts()}">
-
-                      <div th:each="notice : ${parts.getNotices()}">
-                        <div th:if="${notice.getId() == 5}">
-                          <span class="badge bg-success">装着中</span>
-                          <p class="mb-2" th:text="${parts.getName()}"></p>
-                        </div>
+              <div class="card-body">
+                <div class="my-2">
+                  <h5 th:text="${category.getName()}"></h5>
+                  <hr>
+  
+  
+                  <p th:text="${'総交換回数：' + category.getParts().size() + '回'}"></p>
+  
+                </div>
+              </div>
+              <div class="card-footer bg-primary text-light fw-bold">
+                <p>装着中の部品</p>
+              </div>
+              <div class="card-footer">
+                <div th:if="${category.getParts().isEmpty()}">
+                  <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                  無し
+                </div>
+                <div th:unless="${category.getParts().isEmpty()}">
+                  <div th:each="parts : ${category.getParts()}">
+  
+                    <div th:each="notice : ${parts.getNotices()}">
+                      <div th:if="${notice.getId() == 5}">
+                        <i class="fa-regular fa-circle-check text-success"></i>
+                        <span class="mb-2" th:text="${parts.getName()}"></span>
                       </div>
-
                     </div>
+  
                   </div>
                 </div>
-
-                <hr>
-
-                <p th:text="${'総交換回数：' + category.getParts().size() + '回'}"></p>
-
               </div>
             </div>
           </div>

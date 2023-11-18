@@ -84,6 +84,11 @@
           </a>
         </div>
 
+        <div class="mb-3">
+          <a th:href="@{/}">Top</a> >>
+          <span>家計簿Top</span>
+        </div>
+
         <div class="d-flex flex-wrap justify-content-between mb-3">
 
           <!-- 検索フォーム -->
@@ -122,7 +127,7 @@
             <small>前月</small>
           </span>
           <a href="#" data-bs-toggle="modal" data-bs-target="#paymentSelectDateModal" class="text-dark fs-3">
-            <span th:text="${year + '年 ' + month + '月'}"></span>
+            <strong class="fs-5" th:text="${year + '年 ' + month + '月'}"></strong>
           </a>
           <span th:if="${year == currentYear && month == currentMonth}">
             <span class="text-secondary ms-3">
@@ -192,168 +197,171 @@
 
         <!-- 支払いデータ一覧 -->
         <div th:if="${!payments.isEmpty()}" class="row justify-content-center">
-          <ul class="col-xl-8 col-lg-10 col-md-12 col-11">
-            <li th:each="payment : ${payments}">
-              <div class="row mb-1">
-                <div class="col-6">
-                  <p th:text="${#temporals.format(payment.getDate(), 'yyyy年MM月dd日')}"></p>
-                </div>
-                <div class="col-6 text-end">
-                  <a th:href="@{/payments/__${payment.getId()}__/edit}" class="text-success">
-                    <i class="fa-solid fa-pencil"></i>
-                  </a>
-                  <span>｜</span>
-                  <a href="#" class="text-danger" data-bs-toggle="modal" th:data-bs-target="${'#delPaymentModal' + payment.getId()}">
-                    <i class="fa-solid fa-trash-can"></i>
-                  </a>
-
-                  <!-- 削除用モーダル -->
-                  <div class="modal fade" th:id="${'delPaymentModal' + payment.getId()}" tabindex="-1">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <p class="modal-title">
-                            以下のデータを削除します、よろしいですか？
-                          </p>
-                        </div>
-                        <div class="modal-body text-start">
-                          <div class="container-fluid">
-                            <div class="row mb-2">
-                              <div class="col-md-3">
-                                日付：
+          <ul class="col-lg-10">
+            <li th:each="payment : ${payments}" class="card shadow mb-2">
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col-6">
+                    <p th:text="${#temporals.format(payment.getDate(), 'yyyy年MM月dd日')}"></p>
+                  </div>
+                  <div class="col-6 text-end">
+                    <a th:href="@{/payments/__${payment.getId()}__/edit}" class="text-success">
+                      <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <span>｜</span>
+                    <a href="#" class="text-danger" data-bs-toggle="modal" th:data-bs-target="${'#delPaymentModal' + payment.getId()}">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </a>
+  
+                    <!-- 削除用モーダル -->
+                    <div class="modal fade" th:id="${'delPaymentModal' + payment.getId()}" tabindex="-1">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <p class="modal-title">
+                              以下のデータを削除します、よろしいですか？
+                            </p>
+                          </div>
+                          <div class="modal-body text-start">
+                            <div class="container-fluid">
+                              <div class="row mb-2">
+                                <div class="col-md-3">
+                                  日付：
+                                </div>
+                                <div class="col-md-9">
+                                  <strong th:text="${#temporals.format(payment.getDate(), 'YYYY年MM月dd日')}"></strong>
+                                </div>
                               </div>
-                              <div class="col-md-9">
-                                <strong th:text="${#temporals.format(payment.getDate(), 'YYYY年MM月dd日')}"></strong>
+                              <div class="row mb-2">
+                                <div class="col-md-3">
+                                  タイトル：
+                                </div>
+                                <div class="col-md-9">
+                                  <strong th:text="${payment.getName()}"></strong>
+                                </div>
                               </div>
-                            </div>
-                            <div class="row mb-2">
-                              <div class="col-md-3">
-                                タイトル：
-                              </div>
-                              <div class="col-md-9">
-                                <strong th:text="${payment.getName()}"></strong>
-                              </div>
-                            </div>
-                            <div class="row mb-2">
-                              <div class="col-md-3">
-                                金額：
-                              </div>
-                              <div class="col-md-9">
-                                <strong th:text="${'￥' + payment.getPrice() + '円'}"></strong>
+                              <div class="row mb-2">
+                                <div class="col-md-3">
+                                  金額：
+                                </div>
+                                <div class="col-md-9">
+                                  <strong th:text="${'￥' + payment.getPrice() + '円'}"></strong>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="modal-footer">
-                          <form th:action="@{/payments/__${payment.getId()}__/delete}" method="post">
-                            <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                            <button type="submit" class="btn btn-danger">削除</button>
-                          </form>
+                          <div class="modal-footer">
+                            <form th:action="@{/payments/__${payment.getId()}__/delete}" method="post">
+                              <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                              <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                            </form>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row align-items-center mb-2">
-                <div class="col-2 text-secondary text-center">
-                  <i th:class="${methodIcons.get(payment.getMethod())}"></i>
+  
+                <div class="row align-items-center mb-2">
+                  <div class="col-2 text-secondary text-center">
+                    <i th:class="${methodIcons.get(payment.getMethod())}"></i>
+                  </div>
+                  <div class="col-md-1 col-2 text-md-start text-center p-0">
+                    <i class="fa-solid fa-forward"></i>
+                  </div>
+                  <div class="col-md-9 col-8 p-0">
+                    <strong th:text="${payment.getName()}"></strong>
+                  </div>
                 </div>
-                <div class="col-md-1 col-2 text-md-start text-center p-0">
-                  <i class="fa-solid fa-forward"></i>
-                </div>
-                <div class="col-md-9 col-8 p-0">
-                  <strong th:text="${payment.getName()}"></strong>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-12">
-                  <span th:if="${payment.getTags().isEmpty()}" class="d-flex justify-content-between align-items-center">
-                    <span>
-                      分類タグ：
-                      <span class="badge bg-danger">無し</span>
-                    </span>
-                    <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#addPaymentTagsModal' + payment.getId()}">
-                      タグ追加
-                      <i class="fa-solid fa-tags"></i>
-                    </a>
-                  </span>
-                  <span th:unless="${payment.getTags().isEmpty()}">
-                    分類タグ：
-                    <span th:each="tag : ${payment.getTags()}" class="badge bg-success ms-2" th:text="${tag.getName()}"></span>
-                    <div class="text-end">
-                      <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#delPaymentTagsModal' + payment.getId()}" class="text-danger">
-                        タグ削除
-                        <i class="fa-solid fa-delete-left"></i>
+  
+                <div class="row">
+                  <div class="col-12">
+                    <span th:if="${payment.getTags().isEmpty()}" class="d-flex justify-content-between align-items-center">
+                      <span>
+                        分類タグ：
+                        <span class="badge bg-danger">無し</span>
+                      </span>
+                      <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#addPaymentTagsModal' + payment.getId()}">
+                        タグ追加
+                        <i class="fa-solid fa-tags"></i>
                       </a>
-                    </div>
-                  </span>
-                </div>
-                
-                <!-- タグ追加モーダル -->
-                <div th:if="${payment.getTags().isEmpty()}" class="modal fade" th:id="${'addPaymentTagsModal' + payment.getId()}" tabindex="-1">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <div class="modal-title">
-                          <span th:text="${'タグ追加：' + payment.getName()}"></span>
-                        </div>
+                    </span>
+                    <span th:unless="${payment.getTags().isEmpty()}">
+                      分類タグ：
+                      <span th:each="tag : ${payment.getTags()}" class="badge bg-success ms-2" th:text="${tag.getName()}"></span>
+                      <div class="text-end">
+                        <a href="#" data-bs-toggle="modal" th:data-bs-target="${'#delPaymentTagsModal' + payment.getId()}" class="text-danger">
+                          タグ削除
+                          <i class="fa-solid fa-delete-left"></i>
+                        </a>
                       </div>
-                      <form th:action="@{/payments/__${payment.getId()}__/addTags}" method="post" th:object="${paymentTagsForm}">
-                        <div class="modal-body">
-                          <span th:each="tag : ${tags}" class="me-2">
-                            <label th:for="${payment.getId() + 'tag' + tag.getId()}" class="form-check-label badge bg-success" th:text="${tag.getName()}"></label>
-                            <input type="checkbox" name="tagIds[]" th:value="${tag.getId()}" th:id="${payment.getId() + 'tag' + tag.getId()}" class="form-check-input">
-                          </span>
+                    </span>
+                  </div>
+                  
+                  <!-- タグ追加モーダル -->
+                  <div th:if="${payment.getTags().isEmpty()}" class="modal fade" th:id="${'addPaymentTagsModal' + payment.getId()}" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <div class="modal-title">
+                            <span th:text="${'タグ追加：' + payment.getName()}"></span>
+                          </div>
                         </div>
-                        <div class="modal-footer">
-                          <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                          <button type="submit" class="btn btn-primary">追加</button>
-                        </div>
-                      </form>
+                        <form th:action="@{/payments/__${payment.getId()}__/addTags}" method="post" th:object="${paymentTagsForm}">
+                          <div class="modal-body">
+                            <label th:each="tag : ${tags}" class="form-check-label me-3">
+                              <span th:for="${payment.getId() + 'tag' + tag.getId()}" class="badge bg-success" th:text="${tag.getName()}"></span>
+                              <input type="checkbox" name="tagIds[]" th:value="${tag.getId()}" th:id="${payment.getId() + 'tag' + tag.getId()}" class="form-check-input">
+                            </label>
+                          </div>
+                          <div class="modal-footer">
+                            <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-primary btn-sm">追加</button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <!-- タグ削除モーダル -->
-                <div th:unless="${payment.getTags().isEmpty()}" class="modal fade" th:id="${'delPaymentTagsModal' + payment.getId()}" tabindex="-1">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <div class="modal-title text-danger" th:text="${'タグ削除：' + payment.getName()}"></div>
+  
+                  <!-- タグ削除モーダル -->
+                  <div th:unless="${payment.getTags().isEmpty()}" class="modal fade" th:id="${'delPaymentTagsModal' + payment.getId()}" tabindex="-1">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <div class="modal-title text-danger" th:text="${'タグ削除：' + payment.getName()}"></div>
+                        </div>
+                        <form th:action="@{/payments/__${payment.getId()}__/deleteTags}" method="post" th:object="${paymentTagsForm}">
+                          <div class="modal-body">
+                            <label th:each="tag : ${payment.getTags()}" class="form-check-label me-3">
+                              <span th:for="${payment.getId() + 'tag' + tag.getId()}" class="badge bg-success" th:text="${tag.getName()}"></span>
+                              <input type="checkbox" name="tagIds[]" th:value="${tag.getId()}" th:id="${payment.getId() + 'tag' + tag.getId()}" class="form-check-input">
+                            </label>
+                          </div>
+                          <div class="modal-footer">
+                            <span class="btn btn-secondary btn-sm" data-bs-dismiss="modal">閉じる</span>
+                            <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                          </div>
+                        </form>
                       </div>
-                      <form th:action="@{/payments/__${payment.getId()}__/deleteTags}" method="post" th:object="${paymentTagsForm}">
-                        <div class="modal-body">
-                          <span th:each="tag : ${payment.getTags()}" class="me-2">
-                            <label th:for="${payment.getId() + 'tag' + tag.getId()}" class="form-check-label badge bg-success" th:text="${tag.getName()}"></label>
-                            <input type="checkbox" name="tagIds[]" th:value="${tag.getId()}" th:id="${payment.getId() + 'tag' + tag.getId()}" class="form-check-input">
-                          </span>
-                        </div>
-                        <div class="modal-footer">
-                          <span class="btn btn-secondary" data-bs-dismiss="modal">閉じる</span>
-                          <button type="submit" class="btn btn-danger">削除</button>
-                        </div>
-                      </form>
                     </div>
                   </div>
+  
                 </div>
-
               </div>
 
-              <div class="row">
-                <div class="col-6">
-                  <strong class="text-primary" th:text="${'￥' + #numbers.formatInteger(payment.getPrice(), 1, 'COMMA') + '円'}"></strong>
-                </div>
-                <div class="col-6">
-                  <div class="d-flex flex-wrap">
-                    <span class="ms-auto">分類カテゴリー：</span>
-                    <strong class="ms-md-0 ms-auto" th:text="${payment.getCategory().getName()}"></strong>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-6">
+                    <strong class="text-primary" th:text="${'￥' + #numbers.formatInteger(payment.getPrice(), 1, 'COMMA') + '円'}"></strong>
+                  </div>
+                  <div class="col-6">
+                    <div class="d-flex flex-wrap">
+                      <span class="ms-auto">分類カテゴリー：</span>
+                      <strong class="ms-md-0 ms-auto" th:text="${payment.getCategory().getName()}"></strong>
+                    </div>
                   </div>
                 </div>
               </div>
-              <hr class="mt-0">
 
             </li>
             <li class="mt-5">

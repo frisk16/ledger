@@ -18,60 +18,70 @@
     <div class="container mt-3">
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
+
           <h5 class="text-center my-4" th:text="${'パーツ追加｜' + partsCategory.getName()}"></h5>
 
-          <form th:action="@{/admin/parts/__${partsCategory.getId()}__/createParts}" method="post" th:object="${partsRegisterForm}" enctype="multipart/form-data">
-            <div class="form-group row mt-3">
-              <div class="col-lg-4">
-                <label for="name" class="col-form-label">
-                  パーツ名
-                </label>
+          <div class="mb-3">
+            <a th:href="@{/admin}">管理者Top</a> >>
+            <a th:href="@{/admin/parts}">部品管理ページ</a> >>
+            <a th:href="@{/admin/parts/__${partsCategory.getId()}__/showCategory}">カテゴリー詳細</a> >>
+            <span>パーツ追加</span>
+          </div>  
+
+          <div class="card card-body shadow">
+            <form th:action="@{/admin/parts/__${partsCategory.getId()}__/createParts}" method="post" th:object="${partsRegisterForm}" enctype="multipart/form-data">
+              <div class="form-group row mt-3">
+                <div class="col-lg-4">
+                  <label for="name" class="col-form-label">
+                    パーツ名
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <input type="text" th:field="*{name}" class="form-control" placeholder="50文字以内">
+                  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></div>
+                </div>
               </div>
-              <div class="col-lg-8">
-                <input type="text" th:field="*{name}" class="form-control" placeholder="50文字以内">
-                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></div>
+              <div class="form-group row mt-3">
+                <div class="col-lg-4">
+                  <label for="image" class="col-form-label">
+                    画像選択
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <input type="file" th:field="*{image}" class="form-control" placeholder="画像を選択">
+                
+                  <div class="mt-2" id="imagePreview"></div>
+                </div>
               </div>
-            </div>
-            <div class="form-group row mt-3">
-              <div class="col-lg-4">
-                <label for="image" class="col-form-label">
-                  画像選択
-                </label>
+              <div class="form-group row mt-3">
+                <div class="col-lg-4">
+                  <label for="description" class="col-form-label">
+                    詳細
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <textarea th:field="*{description}" class="form-control" cols="30" rows="10" placeholder="255文字以内"></textarea>              
+                  <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger small"></div>
+                </div>
               </div>
-              <div class="col-lg-8">
-                <input type="file" th:field="*{image}" class="form-control" placeholder="画像を選択">
-              
-                <div class="mt-2" id="imagePreview"></div>
+              <div class="form-group row mt-3">
+                <div class="col-lg-4">
+                  <label for="exchangedDate" class="col-form-label">
+                    交換日
+                  </label>
+                </div>
+                <div class="col-lg-8">
+                  <input type="text" th:field="*{exchangedDate}" class="form-control date-form">
+                  <div th:if="${#fields.hasErrors('exchangedDate')}" th:errors="*{exchangedDate}" class="text-danger small"></div>
+                </div>
               </div>
-            </div>
-            <div class="form-group row mt-3">
-              <div class="col-lg-4">
-                <label for="description" class="col-form-label">
-                  詳細
-                </label>
+              <div class="form-group row justify-content-center mt-5">
+                <div class="col-lg-12">
+                  <button type="submit" class="btn btn-primary w-100">追加</button>
+                </div>
               </div>
-              <div class="col-lg-8">
-                <textarea th:field="*{description}" class="form-control" cols="30" rows="10" placeholder="255文字以内"></textarea>              
-                <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger small"></div>
-              </div>
-            </div>
-            <div class="form-group row mt-3">
-              <div class="col-lg-4">
-                <label for="exchangedDate" class="col-form-label">
-                  交換日
-                </label>
-              </div>
-              <div class="col-lg-8">
-                <input type="text" th:field="*{exchangedDate}" class="form-control date-form">
-                <div th:if="${#fields.hasErrors('exchangedDate')}" th:errors="*{exchangedDate}" class="text-danger small"></div>
-              </div>
-            </div>
-            <div class="form-group row justify-content-center mt-5">
-              <div class="col-lg-12">
-                <button type="submit" class="btn btn-primary w-100">追加</button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>

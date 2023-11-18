@@ -46,6 +46,13 @@
               <i class="fa-solid fa-tags"></i>
               タグ一覧
             </h5>
+
+            <div class="mt-3">
+              <a th:href="@{/}">Top</a> >>
+              <a th:href="@{/payments}">家計簿Top</a> >>
+              <span>タグ一覧</span>
+            </div>    
+
             <form th:action="@{/tags/create}" method="post" th:object="${tagRegisterForm}">
               <input type="hidden" th:field="*{userId}">
               <div class="row">
@@ -79,8 +86,8 @@
                         </div>
                         <div class="modal-footer">
                           <form th:action="@{/tags/__${tag.getId()}__/delete}" method="post">
-                            <span data-bs-dismiss="modal" class="btn btn-secondary">閉じる</span>
-                            <button type="submit" class="btn btn-danger">削除</button>
+                            <span data-bs-dismiss="modal" class="btn btn-secondary btn-sm">閉じる</span>
+                            <button type="submit" class="btn btn-danger btn-sm">削除</button>
                           </form>
                         </div>
                       </div>
