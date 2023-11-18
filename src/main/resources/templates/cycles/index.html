@@ -51,10 +51,10 @@
                     <div th:each="parts : ${category.getParts()}">
 
                       <div th:each="notice : ${parts.getNotices()}">
-                        <p th:if="${notice.getId() == 5}" class="d-flex flex-wrap mb-1">
+                        <div th:if="${notice.getId() == 5}">
                           <span class="badge bg-success">装着中</span>
-                          <span th:text="${parts.getName()}"></span>
-                        </p>
+                          <p class="mb-2" th:text="${parts.getName()}"></p>
+                        </div>
                       </div>
 
                     </div>

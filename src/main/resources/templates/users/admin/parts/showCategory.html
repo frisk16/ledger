@@ -33,9 +33,7 @@
 
             <div class="row justify-content-center align-items-end mb-5">
               <div class="col-md-6 text-center mb-5 mb-md-0">
-                <div class="gradation">
-                  <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="category-image">
-                </div>
+                <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="category-image">
                 <i th:unless="${category.getImage()}" class="fa-5x fa-solid fa-file-circle-question text-secondary"></i>
               </div>
               <div class="col-md-6 text-end">
