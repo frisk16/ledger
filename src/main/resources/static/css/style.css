@@ -32,6 +32,19 @@ ul {
   list-style: none;
 }
 
+img {
+  object-fit: cover;
+  vertical-align: bottom;
+}
+
+.card-img-top {
+  text-align: center;
+}
+
+.no-image {
+  width: 55%;
+}
+
 .text-danger2 {
   color: var(--danger2-color);
 }
@@ -347,5 +360,9 @@ table img {
 
   table td {
     height: 96px;
+  }
+
+  .no-image.phone {
+    width: 100%;
   }
 }

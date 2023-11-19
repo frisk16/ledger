@@ -38,10 +38,7 @@
             <div class="card shadow">
               <div class="card-img-top">
                 <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="img-fluid">
-                <div th:unless="${category.getImage()}" class="mt-5 text-center">
-                  <i th:unless="${category.getImage()}" class="fa-3x fa-solid fa-file-circle-question text-secondary"></i>
-                  <p class="mt-3">【画像なし】</p>
-                </div>
+                <img th:unless="${category.getImage()}" th:src="@{/img/no_image.png}" class="img-fluid no-image">
               </div>
               <div class="card-body">
                 <div class="my-2">
@@ -72,6 +69,9 @@
                     </div>
   
                   </div>
+                </div>
+                <div class="text-end">
+                  <a th:href="@{/cycles/__${category.getId()}__}"> >> 全てのパーツ</a>
                 </div>
               </div>
             </div>

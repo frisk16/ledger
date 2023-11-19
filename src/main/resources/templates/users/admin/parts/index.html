@@ -75,8 +75,8 @@
                   <td th:text="${category.getId()}"></td>
                   <td th:text="${category.getName()}"></td>
                   <td> 
-                    <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="img-fluid" alt="">
-                    <i th:unless="${category.getImage()}" class="fa-5x fa-solid fa-file-circle-question text-secondary"></i>
+                    <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="img-fluid">
+                    <img th:unless="${category.getImage()}" th:src="@{/img/no_image.png}" class="img-fluid">
                   </td>
                   <td th:text="${category.getCreatedAt()}"></td>
                   <td><a th:href="@{/admin/parts/__${category.getId()}__/showCategory}">編集</a></td>

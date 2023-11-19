@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <div th:replace="~{fragment :: meta}"></div>
+  <div th:replace="~{fragment :: styles}"></div>
+  <title>帳簿管理サイト｜部品詳細</title>
+</head>
+<body>
+  <div th:replace="~{fragment :: header}"></div>
+
+  <div th:replace="~{fragment :: alertMessages}"></div>
+
+  <div th:replace="~{fragment :: openAsideButton}"></div>
+
+  <aside>
+    <div class="d-flex justify-content-between mb-3">
+      <h5>MENU</h5>
+      <button type="button" id="paymentsCloseMenuBtn" class="btn-close bg-white d-md-none"></button>
+    </div>
+    <div class="container">
+      <div th:replace="~{fragment :: aside}"></div>
+    </div>
+  </aside>  
+
+  <main class="py-5">
+    <div class="col-aside">
+      <div class="container mt-5">
+
+        <h5 class="title" th:text="${category.getName() + '｜詳細ページ'}"></h5>
+
+        <div class="mb-3">
+          <a th:href="@{/}">Top</a> >>
+          <a th:href="@{/cycles}">部品一覧</a> >>
+          <span>部品詳細</span>
+        </div>
+
+        <div th:if="${parts.isEmpty()}" class="row justify-content-center my-5">
+          <div class="col-12 text-center">
+            <h5>
+              <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
+              <p class="mt-3">パーツがありません</p>
+            </h5>
+          </div>
+        </div>
+
+        <div th:unless="${parts.isEmpty()}" class="row justify-content-center">
+          <div class="col-md-10">
+            <ul>
+              <li th:each="item : ${parts}">
+                <div class="card shadow mb-3">
+                  <div class="card-body p-0">
+                    <div class="row m-0">
+                      <div class="col-4 border-end border-primary p-0 text-center">
+                        <img th:if="${item.getImage()}" th:src="${imageUrl + item.getImage()}" class="img-fluid h-100">
+                        <img th:unless="${item.getImage()}" th:src="@{/img/no_image.png}" class="img-fluid no-image phone">
+                      </div>
+                      <div class="col-8 p-0">
+                        <div class="row m-0">
+                          <div class="col-12 bg-primary text-light py-1">
+                            <p>
+                              交換日：
+                              <span th:text="${item.getExchangedDate()}"></span>
+                            </p>
+                          </div>
+                          <div class="col-12 p-2">
+                            <strong th:text="${item.getName()}"></strong>
+                            <hr>
+                            <p th:text="${item.getDescription()}"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <div th:if="${item.getNotices().isEmpty()}" class="text-end text-danger2">
+                      <p>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        タグ無し
+                      </p>
+                    </div>
+                    <div th:unless="${item.getNotices().isEmpty()}" class="d-flex">
+                      <p class="text-success">
+                        <span th:each="notice : ${item.getNotices()}" th:if="${notice.getId() == 5}">
+                          <i class="fa-regular fa-circle-check"></i>
+                        </span>
+                      </p>
+                      <p class="ms-auto">
+                        <span th:each="notice : ${item.getNotices()}" class="badge bg-danger2 ms-1" th:text="${notice.getName()}"></span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <!-- ページネーション -->
+              <li class="mt-5">
+                <div th:if="${parts.getTotalPages() > 1}" class="d-flex justify-content-center">
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <span th:if="${parts.isFirst()}" class="page-link disabled">前</span>
+                        <a th:unless="${parts.isFirst()}" th:href="@{/cycles/__${category.getId()}__(page = ${parts.getNumber() - 1})}" class="page-link">前</a>
+                      </li>
+                      <li th:each="i : ${#numbers.sequence(0, parts.getTotalPages() - 1)}" class="page-item">
+                        <span th:if="${i == parts.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
+                        <a th:unless="${i == parts.getNumber()}" th:href="@{/cycles/__${category.getId()}__(page = ${i})}" class="page-link" th:text="${i + 1}"></a>
+                      </li>
+                      <li class="page-item">
+                        <span th:if="${parts.isLast()}" class="page-link disabled">次</span>
+                        <a th:unless="${parts.isLast()}" th:href="@{/cycles/__${category.getId()}__(page = ${parts.getNumber() + 1})}" class="page-link">次</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="col-aside">
+    <div th:replace="~{fragment :: footer}"></div>
+  </div>
+
+  <div th:replace="~{fragment :: scripts}"></div>
+  <script th:src="@{/js/aside.js}"></script>
+</body>
+</html>

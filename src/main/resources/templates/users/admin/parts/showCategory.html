@@ -40,7 +40,7 @@
             <div class="row justify-content-center align-items-end mb-5">
               <div class="col-md-6 text-center mb-5 mb-md-0">
                 <img th:if="${category.getImage()}" th:src="${imageUrl + category.getImage()}" class="category-image">
-                <i th:unless="${category.getImage()}" class="fa-5x fa-solid fa-file-circle-question text-secondary"></i>
+                <img th:unless="${category.getImage()}" th:src="@{/img/no_image.png}" class="category-image">
               </div>
               <div class="col-md-6 text-end">
                 <a href="#" class="btn btn-success fw-bold btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">カテゴリー編集</a>
@@ -90,7 +90,7 @@
                       <div class="row">
                         <div class="col-3 border-end border-secondary text-center">
                           <img th:if="${item.getImage()}" th:src="${imageUrl + item.getImage()}" class="img-fluid">
-                          <i th:unless="${item.getImage()}" class="fa-3x fa-solid fa-file-circle-question text-secondary"></i>
+                          <img th:unless="${item.getImage()}" th:src="@{/img/no_image.png}" class="img-fluid no-image">
                         </div>
                         <div class="col-9">
                           <div class="row">
