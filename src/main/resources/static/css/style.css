@@ -1,5 +1,7 @@
 :root {
   --header-height: 64px;
+  --alert-msg-size: 240px;
+  --alert-msg-border-bottom: 32px;
   --bg-color: #eee;
   --navbar-color: #aaa;
   --pagination-active-color: #0af;
@@ -53,34 +55,46 @@ img {
   background-color: var(--danger2-color);
 }
 
-.alert-primary,
-.alert-success,
-.alert-danger {
+
+.alert-msg {
   position: fixed;
   z-index: -1;
-  background: #777;
-  border: none;
   opacity: 0;
-  bottom: 10%;
-  left: 15%;
-  right: 15%;
-  animation-name: alert;
-  animation-duration: 2.5s;
+  inset: 0;
+  margin: auto;
+  background-color: rgba(100, 100, 100, 0.8); 
+  width: var(--alert-msg-size);
+  height: var(--alert-msg-size);
+  border-radius: 16px;
+  text-align: center;
+  animation: alert 2.5s;
+}
+.alert-msg > h6 {
+  color: #fff;
+  margin-top: 16px;
+  padding: 0 16px;
 }
 
-.alert-primary {
-  border-bottom: 4px solid #57f;
-  color: #acf;
+.alert-msg.primary-msg {
+  border-bottom: var(--alert-msg-border-bottom) solid #0af;
 }
-
-.alert-success {
-  border-bottom: 4px solid #5f5;
-  color: #afa;
+.primary-msg > i {
+  margin-top: calc((var(--alert-msg-size) - var(--alert-msg-border-bottom)) / 4);
+  color: #0f0;
 }
-
-.alert-danger {
-  border-bottom: 4px solid #f75;
-  color: #fca;
+.alert-msg.success-msg {
+  border-bottom: var(--alert-msg-border-bottom) solid #0f0;
+}
+.success-msg > i {
+  margin-top: calc((var(--alert-msg-size) - var(--alert-msg-border-bottom)) / 4);
+  color: #fff;
+}
+.alert-msg.danger-msg {
+  border-bottom: var(--alert-msg-border-bottom) solid #f80;
+}
+.danger-msg > i {
+  margin-top: calc((var(--alert-msg-size) - var(--alert-msg-border-bottom)) / 4);
+  color: #ff0;
 }
 
 .alert-warning {
@@ -92,10 +106,10 @@ img {
 }
 
 @keyframes alert {
-  0% { opacity: 0; z-index: 2; }
-  10% { opacity: 0.9; z-index: 2; }
-  90% { opacity: 0.9; z-index: 2; }
-  100% { opacity: 0; }
+  0% { opacity: 0; }
+  25% { opacity: 1; z-index: 2; }
+  75% { opacity: 1; z-index: 2; }
+  100% { opacity: 0; z-index: -1; }
 }
 
 .navbar {
@@ -330,6 +344,10 @@ table img {
   h5, h6 {
     font-size: 0.9rem !important;
     font-weight: bold;
+  }
+
+  .alert-msg > h6 {
+    font-size: 1rem !important;
   }
 
   .alert {

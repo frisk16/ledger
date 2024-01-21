@@ -26,23 +26,29 @@
 
   <!-- alertMessages -->
   <div th:fragment="alertMessages" th:remove="tag">
-    <div th:if="${param.logined}" class="alert alert-primary text-center">
-      ログインしました
+    <div th:if="${param.logined}" class="alert-msg success-msg">
+      <i class="fa-5x fa-solid fa-person-walking-arrow-right"></i>
+      <h6>ログインしました</h6>
     </div>
-    <div th:if="${param.continue}" class="alert alert-primary text-center">
-      ログインしました
+    <div th:if="${param.continue}" class="alert-msg success-msg">
+      <i class="fa-5x fa-solid fa-person-walking-arrow-right"></i>
+      <h6>ログインしました</h6>
     </div>
-    <div th:if="${param.logouted}" class="alert alert-primary text-center">
-      ログアウトしました
+    <div th:if="${param.logouted}" class="alert-msg success-msg">
+      <i class="fa-5x fa-solid fa-door-open"></i>
+      <h6>ログアウトしました</h6>
     </div>
-    <div th:if="${param.error}" class="alert alert-danger text-center">
-      ユーザー名、又はEメールアドレスが正しくありません
+    <div th:if="${param.error}" class="alert-msg danger-msg">
+      <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
+      <h6>ユーザー名、又はパスワードが違います</h6>
     </div>
-    <div th:if="${successMsg}" class="alert alert-success text-center">
-      <span th:text="${successMsg}"></span>
+    <div th:if="${successMsg}" class="alert-msg primary-msg">
+      <i class="fa-5x fa-regular fa-circle-check"></i>
+      <h6 th:text="${successMsg}"></h6>
     </div>
-    <div th:if="${errorMsg}" class="alert alert-danger text-center">
-      <span th:text="${errorMsg}"></span>
+    <div th:if="${errorMsg}" class="alert-msg danger-msg">
+      <i class="fa-5x fa-solid fa-triangle-exclamation"></i>
+      <h6 th:text="${errorMsg}"></h6>
     </div>
     <div th:if="${warningMsg}" class="alert alert-warning text-center">
       <i class="fa-solid fa-triangle-exclamation"></i>
